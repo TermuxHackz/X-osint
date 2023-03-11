@@ -24,7 +24,6 @@ If you notice issues while installing this tool or running this tool kindly mail
 python-3
 pip
 Internet Connection
-A built mind
 ``` 
 <hr>
 
