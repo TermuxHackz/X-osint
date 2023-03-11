@@ -46,7 +46,7 @@ pip install requests
 echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
-cp -r xosint.py /data/data/com.termux/files/usr/bin
+cp xosint.py /data/data/com.termux/files/usr/bin
 cd /data/data/com.termux/files/usr/bin && mv xosint.py xosint
 cd /data/data/com.termux/files/usr/bin && chmod u+x xosint
  printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Termux To use X-osint\e[0m\n" 
