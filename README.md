@@ -78,8 +78,7 @@ Icon: Click the No icon button and add an icon of your choice
 ```
 #### 3) For the Options
 Tick 
-- [x] Run in terminal <br/><br/>
-And that's all. Thank you
+- [x] Run in terminal
 
 # Menu
 <img src="X-osint.png" align="center"/>
