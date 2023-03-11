@@ -62,18 +62,22 @@ chmod +x *
 bash setup.sh
 ```
 
-# How to create a desktop Launcher for Xosint in Linux
+# How to create a desktop Launcher for X-osint in Linux
 #### 1) Go to your home desktop, right click then click on Create Launcher
 #### 2) Fill the field as follows
 ```
 Name: X-osint
-<b>Comment: </b>An osint tool made by AnonyminHack5 in python3
+
+Comment: An osint tool made by AnonyminHack5 in python3
+
 Command: sudo xosint
+
 Working Directory: /usr/local/bin
+
 Icon: Click the No icon button and add an icon of your choice 
 ```
 #### 3) For the Options
-- [ ] Run in terminal
+- [ ] Run in terminal <br/>
 And that's all. Thank you
 
 # Menu
