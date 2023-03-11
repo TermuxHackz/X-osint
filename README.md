@@ -94,9 +94,9 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 <h5><u>How to Update For Termux</u></h5>
 
 #### 1) Type:
-> cd $HOME
-> cd $PREFIX/bin 
-> rm xosint
+>> cd $HOME
+>> cd $PREFIX/bin
+>> rm xosint
 
 #### 2) Re-clone from git:
 > cd $HOME
