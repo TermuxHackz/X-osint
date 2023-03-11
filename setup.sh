@@ -20,7 +20,7 @@ echo -e "\033[1;91m
    echo
 	printf "\e[1;34m\tSelect your terminal to install X-osint \e[0m\n"
 	printf "\e[1;91m\t[!] PLEASE MAKE SURE YOU CHOOSE CORRECTLY [!] \e[0m\n\n"
-	printf "\e[1;34m\t\t[\e[0m\e[1;77m01\e[0m\e[1;34m]\e[0m\e[1;93mTermux\e[0m\e[1;91m [UNSTABLE]\e[0m\n"
+	printf "\e[1;34m\t\t[\e[0m\e[1;77m01\e[0m\e[1;34m]\e[0m\e[1;93mTermux\e[0m\e[1;91m [STABLE]\e[0m\n"
 printf "\e[1;34m\t\t[\e[0m\e[1;77m02\e[0m\e[1;34m]\e[0m\e[1;93mLinux\e[0m\n"
 read -p $'\n\e[1;92m[\e[0m\e[1;77m*\e[0m\e[1;92m] Choose your terminal: \e[0m\en' terminal
 
@@ -49,6 +49,7 @@ echo
 cp -r xosint.py $PREFIX/bin
 cd $PREFIX/bin && mv xosint.py xosint
 cd $PREFIX/bin && chmod u+x xosint
+cd $HOME && rm -rf X-osint
  printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Termux To use X-osint\e[0m\n" 
  printf "\e[1;91m[*]\e[1;97m After reopen your termux just type '\e[1;91mxosint\e[1;97m' to launch X-osint \e[0m\n" 
  exit
