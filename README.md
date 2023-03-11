@@ -67,13 +67,13 @@ bash setup.sh
 #### 2) Fill the field as follows
 ```
 Name: X-osint
-Comment: An osint tool made by AnonyminHack5 in python3
+<b>Comment: </b>An osint tool made by AnonyminHack5 in python3
 Command: sudo xosint
 Working Directory: /usr/local/bin
 Icon: Click the No icon button and add an icon of your choice 
 ```
 #### 3) For the Options
-- [] Run in terminal
+- [ ] Run in terminal
 And that's all. Thank you
 
 # Menu
