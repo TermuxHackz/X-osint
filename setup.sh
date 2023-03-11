@@ -49,7 +49,6 @@ echo
 cp -r xosint.py /data/data/com.termux/files/usr/bin
 cd /data/data/com.termux/files/usr/bin && mv xosint.py xosint
 cd /data/data/com.termux/files/usr/bin && chmod u+x xosint
-cd $HOME && rm -rf X-osint
  printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Termux To use X-osint\e[0m\n" 
  printf "\e[1;91m[*]\e[1;97m After reopen your termux just type '\e[1;91mxosint\e[1;97m' to launch X-osint \e[0m" 
  exit
