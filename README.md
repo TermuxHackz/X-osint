@@ -27,8 +27,34 @@ Internet Connection
 ``` 
 <hr>
 
-# Installation 
-**COMING SOON**
+# Installation for Termux
+`
+cd $HOME
+git clone https://github.com/TermuxHackz/X-osint
+cd X-osint
+chmod +x *
+bash setup.sh
+`
+# Installation for Linux
+`
+cd $HOME
+
+git clone https://github.com/TermuxHackz/X-osint
+
+cd X-osint
+
+chmod +x *
+
+bash setup.sh
+
+python3 xosint.py
+
+# Demo
+<img src="X-osint.png" align="center"/>
+
+```
+Works for Termux and Linux 
+Tested 
 
 
 
