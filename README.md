@@ -8,4 +8,32 @@ This is an osint tool which gathers useful and yet credible valid information ab
   </h2>
   <hr>
   
+  # Features
+  ```
+  1) IP Address information gathering
+  2) Email Address information gathering 
+  3) Phone number information gathering 
+  ```
+  <b>MANY OTHER FEATURES SOON TO COME </b>
+
+# Report bugs
+If you notice issues while installing this tool or running this tool kindly mail to me at <a href="mailto: AnonyminHack5@protonmail.com">Gmail</a> or Open an issue via github.
+
+## Requirements 
+```
+python-3
+pip
+Internet Connection
+A built mind
+``` 
+<hr>
+
+# Installation 
+**COMING SOON**
+
+
+
+
+
+
   
