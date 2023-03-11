@@ -92,6 +92,7 @@ Tested
 # How to Update Manually
 This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
 <h5><u>How to Update For Termux</u></h5>
+
 #### 1) Type:
 > cd $HOME
 > cd $PREFIX/bin 
@@ -114,7 +115,7 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 > cd /usr/local/bin
 > sudo rm xosint
 
-### 2) Re-clone from GitHub
+#### 2) Re-clone from GitHub
 > cd $HOME
 > git clone https://github.com/TermuxHackz/X-osint
 > cd X-osint
