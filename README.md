@@ -44,6 +44,54 @@ bash setup.sh
 THANKS FOR BEARING WITH ME
 </h5>
 
+# How to Update Manually
+This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
+<h5><u>How to Update For Termux</u></h5>
+
+#### 1) Type:
+> cd $HOME
+
+> cd $PREFIX/bin
+
+> rm xosint
+
+#### 2) Re-clone from git:
+> cd $HOME
+
+> git clone https://github.com/TermuxHackz/X-osint
+
+> cd X-osint
+
+#### 3) Grant permissions and run install file
+> chmod +x *
+
+> bash setup.sh
+
+<b>And your all done!!!..and updated </b>
+
+<h5><u>How to Update for Linux</u></h5>
+#### 1) Type:
+> cd $HOME
+
+> cd /usr/local/bin
+
+> sudo rm xosint
+
+#### 2) Re-clone from GitHub
+> cd $HOME
+
+> git clone https://github.com/TermuxHackz/X-osint
+
+> cd X-osint
+
+#### 3) Grant permissions and run install file
+> chmod +x *
+
+> bash setup.sh
+
+<b>And your all done!!!..and updated </b>
+
+
 # Installation for Termux
 ```
 cd $HOME
@@ -89,43 +137,6 @@ Tick
 Works for Termux and Linux 
 Tested 
 ```
-# How to Update Manually
-This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
-<h5><u>How to Update For Termux</u></h5>
-
-#### 1) Type:
->> cd $HOME
->> cd $PREFIX/bin
->> rm xosint
-
-#### 2) Re-clone from git:
-> cd $HOME
-> git clone https://github.com/TermuxHackz/X-osint
-> cd X-osint
-
-#### 3) Grant permissions and run install file
-> chmod +x *
-> bash setup.sh
-
-<b>And your all done!!!..and updated </b>
-
-<h5><u>How to Update for Linux</u></h5>
-#### 1) Type:
-> cd $HOME
-> cd /usr/local/bin
-> sudo rm xosint
-
-#### 2) Re-clone from GitHub
-> cd $HOME
-> git clone https://github.com/TermuxHackz/X-osint
-> cd X-osint
-
-#### 3) Grant permissions and run install file
-> chmod +x *
-> bash setup.sh
-
-<b>And your all done!!!..and updated </b>
-
 
 # Buy me a coffee
 <img src="images.png"/>
