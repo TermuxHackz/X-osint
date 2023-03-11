@@ -46,7 +46,7 @@ pip install requests
 echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
-sudo cp -r xosint.py /data/data/com.termux/files/usr/bin
+cp -r xosint.py /data/data/com.termux/files/usr/bin
 cd /data/data/com.termux/files/usr/bin && mv xosint.py xosint
 cd /data/data/com.termux/files/usr/bin && chmod u+x xosint
 cd $HOME && rm -rf X-osint
