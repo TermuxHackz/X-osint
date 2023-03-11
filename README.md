@@ -60,7 +60,6 @@ git clone https://github.com/TermuxHackz/X-osint
 cd X-osint
 chmod +x *
 bash setup.sh
-python3 xosint.py
 ```
 
 # Menu
