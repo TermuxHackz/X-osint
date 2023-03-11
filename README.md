@@ -46,7 +46,7 @@ bash setup.sh
 python3 xosint.py
 ```
 
-# Demo
+# Menu
 <img src="X-osint.png" align="center"/>
 
 ```
