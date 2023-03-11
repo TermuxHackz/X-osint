@@ -286,4 +286,4 @@ else:
 	print()
 	print("[*] Invalid Input..try again....")
 	sleep(0.9)
-	os.system("python3 xosint.py ||sudo xosint")
+	os.system("xosint ||sudo xosint")
