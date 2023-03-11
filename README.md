@@ -70,6 +70,7 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 <b>And your all done!!!..and updated </b>
 
 <h5><u>How to Update for Linux</u></h5>
+
 #### 1) Type:
 > cd $HOME
 
