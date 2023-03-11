@@ -1,5 +1,5 @@
-# /bin/python3 ! 
- # Coded by AnonyminHack5
+#!/usr//bin/python3
+
   
  #Importing modules and libraries
 import os
@@ -7,10 +7,7 @@ import time
 import socket
 import requests
 from time import sleep
-from ip2geotools.databases.noncommercial import DbIpCity
 import sys
-import phonenumbers
-from phonenumbers import carrier, geocoder, timezone
 
 banner = """\033[1;91m
                                                                  
@@ -289,4 +286,4 @@ else:
 	print()
 	print("[*] Invalid Input..try again....")
 	sleep(0.9)
-	os.system("python3 xosint.py || xosint")
+	os.system("python3 xosint.py ||sudo xosint")
