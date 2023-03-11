@@ -83,10 +83,17 @@ Tick
 # Menu
 <img src="X-osint.png" align="center"/>
 
+<hr>
+
 ```
 Works for Termux and Linux 
 Tested 
 ```
+
+# Buy me a coffee
+Love my work and wish to support me, Buy me a coffee <a href="https://www.buymeacoffee.com/AnonyminHack5" target="_blank">here </a>
+
+
 
 
 
