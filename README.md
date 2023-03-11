@@ -44,6 +44,7 @@ cd X-osint
 chmod +x *
 bash setup.sh
 python3 xosint.py
+```
 
 # Demo
 <img src="X-osint.png" align="center"/>
