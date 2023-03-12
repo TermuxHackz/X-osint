@@ -175,7 +175,7 @@ Tick
 - [x] Run in terminal
 
 # Menu
-<img src="X-osint.png" align="center"/>
+<img src="X-osintv2.0.png" align="center"/>
 
 <hr>
 
