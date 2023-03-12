@@ -8,34 +8,50 @@ import socket
 import requests
 from time import sleep
 import sys
+import json
+from PIL import Image
+from PIL.ExifTags import TAGS
+import piexif
 
 banner = """\033[1;91m
-                                                                 
-@@@  @@@              @@@@@@    @@@@@@   @@@  @@@  @@@  @@@@@@@  
-@@@  @@@             @@@@@@@@  @@@@@@@   @@@  @@@@ @@@  @@@@@@@  
-@@!  !@@             @@!  @@@  !@@       @@!  @@!@!@@@    @@!    
-!@!  @!!             !@!  @!@  !@!       !@!  !@!!@!@!    !@!    
- !@@!@!   @!@!@!@!@  @!@  !@!  !!@@!!    !!@  @!@ !!@!    @!!    
-  @!!!    !!!@!@!!!  !@!  !!!   !!@!!!   !!!  !@!  !!!    !!!    
- !: :!!              !!:  !!!       !:!  !!:  !!:  !!!    !!:    
-:!:  !:!             :!:  !:!      !:!   :!:  :!:  !:!    :!:    
- ::  :::             ::::: ::  :::: ::    ::   ::   ::     ::    
- :   ::               : :  :   :: : :    :    ::    :      :     
+▒██   ██▒ ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
+▒▒ █ █ ▒░▒██▒  ██▒▒██    ▒ ▓██▒ ██ ▀█   █ ▓  ██▒ ▓▒
+░░  █   ░▒██░  ██▒░ ▓██▄   ▒██▒▓██  ▀█ ██▒▒ ▓██░ ▒░
+ ░ █ █ ▒ ▒██   ██░  ▒   ██▒░██░▓██▒  ▐▌██▒░ ▓██▓ ░ 
+▒██▒ ▒██▒░ ████▓▒░▒██████▒▒░██░▒██░   ▓██░  ▒██▒ ░ 
+▒▒ ░ ░▓ ░░ ▒░▒░▒░ ▒ ▒▓▒ ▒ ░░▓  ░ ▒░   ▒ ▒   ▒ ░░   
+░░   ░▒ ░  ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
+ ░    ░  ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
+ ░    ░      ░ ░        ░   ░           ░          
+                            
         Created by: AnonyminHack5
-        	Version: 1.0
+        Team: TermuxHackz Society
+        	Version: 2.0
 \033[0m"""
-about = """\033[1;91m
-This is an osint tool which gathers useful and yet credible valid information about a phone number, user email address and ip address and more to come in other future updates
-\033[0m"""
+
 main_menu = """
 	\033[1;91m[??] Choose an option:
 	\033[1;91m[1] \033[1;97m IP Address Information
 	\033[1;91m[2] \033[1;97m Email Address Information
 	\033[1;91m[3] \033[1;97m Phone Number Information
+	\033[1;91m[4] \033[1;97m Host Search
+	\033[1;91m[5] \033[1;97m Ports
+	\033[1;91m[6] \033[1;97m Exploit CVE
+	\033[1;91m[7] \033[1;97m Exploit Open Source Vulnerability Database 
+	\033[1;91m[8] \033[1;97m DNS Lookup
+	\033[1;91m[9] \033[1;97m DNS Reverse
+        \033[1;91m[10] \033[1;97mEmail Finder
+        \033[1;91m[11] \033[1;97mExtract Metadata from image
+        \033[1;91m[12]\033[1;97m Check Twitter Status
+        \033[1;91m[13]\033[1;97m Subdomain Enumeration
+	\033[1;91m[u] \033[1;97m Update X-osint
 	\033[1;91m[0] \033[1;97m About
 	\033[1;91m[q] \033[1;97m Quit
 	
 	"""
+about = """\033[1;91m
+This is an osint tool which gathers useful and yet credible valid information about a phone number, user email address and ip address and more to come in other future updates
+\033[0m"""
 def traceip():
 	targetip = input("\033[1;91mEnter IP Address: \033[0m")
 	r = requests.get("http://ip-api.com/json/" + targetip)
@@ -198,59 +214,7 @@ def phone_info():
 	sleep(0.1)
 	print("\033[1;91m➤\033[1;97m Status Code    : " + str(phe.status_code) )
 	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Valid          : " + str(phe.json() ['valid']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m VOIP           : " + str(phe.json() ['VOIP']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Active         : " + str(phe.json() ['active']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Active Status  : " + str(phe.json() ['active_status']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Carrier        : " + str(phe.json() ['carrier']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m City           : " + str(phe.json() ['city']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Country        : " + str(phe.json() ['country']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Dialing Code   : " + str(phe.json() ['dialing_code']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Do Not Call    : " + str(phe.json() ['do_not_call']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Formatted      : " + str(phe.json() ['formatted']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Fraud Score    : " + str(phe.json() ['fraud_score']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Leaked         : " + str(phe.json() ['leaked']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Line Type      : " + str(phe.json() ['line_type']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Local Format   : " + str(phe.json() ['local_format']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m MCC            : " + str(phe.json() ['mcc']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Name           : " + str(phe.json() ['name']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Prepaid        : " + str(phe.json() ['prepaid']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Recent Abuse   : " + str(phe.json() ['recent_abuse']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Region         : " + str(phe.json() ['region']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Request ID     : " + str(phe.json() ['request_id']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Risky          : " + str(phe.json() ['risky']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m SMS Domain     : " + str(phe.json() ['sms_domain']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m SMS E-mail     : " + str(phe.json() ['sms_email']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Spammer        : " + str(phe.json() ['spammer']))
-	sleep(0.1)
 	print("\033[1;91m➤\033[1;97m Success        : " + str(phe.json() ['success']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m TimeZone       : " + str(phe.json() ['timezone']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Zip Code       : " + str(phe.json() ['zip_code']))
 	sleep(0.1)
 	print()
 	print("\033[1;91m➤\033[1;97m VIP INFO \033[0m")
@@ -265,7 +229,73 @@ def phone_info():
 	else:
 		print("\033[1;97m HAHAHAHA!!! Gotacha!!!!Location info feature not available yet...Stay tuned\033[0m")
 		exit
+#### Update script
+def update():
+	os.system("clear")
+	print(banner)
+	print()
+	print("\033[1;91m➤\033[1;97m Searching for updates...-> \033[0m\033[1;94mFound")
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Updating.. \033[0m")
+	sleep(0.1)
+	print()
+	print()
+	print("\033[1;91m\tSelect your terminal for update \033[0m\n")
+	print("\033[1;91m\t[!] PLEASE MAKE SURE YOU CHOOSE CORRECTLY [!] \033[0m\n\n")
+	print("\033[1;34m\t\t[\033[0m\033[1;77m1\033[0m\033[1;34m]\033[0m\033[1;93mTermux\033[0m")
+	print("\033[1;34m\t\t[\033[0m\033[1;77m2\033[0m\033[1;34m]\033[0m\033[1;93mLinux\033[0m\n")
+	update_terminal = input("\033[1;94mChoose: \033[0m")
+	
+	if update_terminal == "1":
+		print("\033[1;97m[+] Updating for termux......\033[0m")
+		print()
+		sleep(0.1)
+		os.system("cd $HOME")
+		os.system("cd $PREFIX/bin")
+		os.system("rm xosint")
+		print("\033[1;97m[+] Validating installation....\033[0m\n")
+		sleep(0.1)
+		os.system("cd $HOME")
+		os.system("git clone https://github.com/TermuxHackz/X-osint")
+		print("\033[1;97m[+] Granting permissions.....\033[0m\n")
+		os.system("cd X-osint")
+		os.system("chmod +x *")
+		sleep(0.5)
+		print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
+		sleep(0.5)
+		print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
+		print("\033[1;97m[+] Update completed.....\033[0m\n")
+		sleep(2)
+		os.system("bash setup.sh")
+	elif update_terminal == "2":
+		print("\033[1;97m[+] Updating for linux......\033[0m")
+		print()
+		sleep(0.1)
+		os.system("cd $HOME")
+		os.system("cd /usr/local/bin")
+		os.system("sudo rm xosint")
+		print("\033[1;97m[+] Validating installation....\033[0m\n")
+		sleep(0.5)
+		os.system("cd $HOME")
+		os.system("git clone https://github.com/TermuxHackz/X-osint")
+		print("")
+		print("\033[1;97m[+] Granting permissions.....\033[0m\n")
+		os.system("cd X-osint")
+		os.system("chmod +x *")
+		sleep(0.5)
+		print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
+		sleep(0.5)
+		print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
+		print("\033[1;97m[+] Update completed.....\033[0m\n")
+		sleep(2)
+		os.system("bash setup.sh")
+	else:
+		print("Invalid input....KINDLY UPDATE...quiting..")
+		sleep(0.5)
+		exit
+		
 #### STart main script
+### 4, 5, 6, 7
 os.system("clear")
 print(banner)
 print(main_menu)
@@ -276,6 +306,209 @@ elif option == "2":
 	email_info()
 elif option == "3":
 	phone_info()
+elif option == "4":
+	def shodan_host():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		host_ip = input("\033[1;91m[+]\033[0m\033[1;97mShodan Host Search (IP): \033[0m")
+		url = "https://api.shodan.io/shodan/host/"+ host_ip +"?key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_host()
+elif option == "5":
+	def shodan_ports():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		url = "https://api.shodan.io/shodan/ports?key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_ports()
+elif option == "6":
+	def shodan_exploit_cve():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		exploit_cve = input("\033[1;91m[+]\033[0m\033[1;97mExploit CVE: \033[0m")
+		url = "https://exploits.shodan.io/api/search?query="+ "cve:" + exploit_cve +"&key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_exploit_cve()
+elif option == "7":
+	def shodan_exploit_osvdb():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		exploit_osvdb = input("\033[1;91m[+]\033[0m\033[1;97mExploit Open Source Vulnerability Database: \033[0m")
+		url = "https://exploits.shodan.io/api/search?query="+ "osvdb:" + exploit_osvdb +"&key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_exploit_osvdb()
+	
+elif option == "8":
+	def shodan_dns_lookup():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		hostnames = input("\033[1;91m[+]\033[0m\033[1;97mDNS Lookup: \033[0m")
+		url = "https://api.shodan.io/dns/resolve?hostnames="+ hostnames +"&key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_dns_lookup()
+	
+elif option == "9":
+	def shodan_dns_reverse():
+		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
+			with open('api.txt', 'r') as file:
+				shodan_api=file.readline().rstrip('\n')
+		else:
+			file = open('api.txt', 'w')
+			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			file.write(shodan_api)
+			print("[+] File written: ./api.txt")
+			file.close()
+		ips = input("\033[1;91m[+]\033[0m\033[1;97mDNS Reverse: \033[0m")
+		url = "https://api.shodan.io/dns/reverse?ips="+ ips +"&key=" + shodan_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+	shodan_dns_reverse()
+
+elif option == "10":
+	if os.path.exists("./api2.txt") and os.path.getsize("./api2.txt") > 0:
+		with open('api2.txt', 'r') as file:
+			hunter_api=file.readline().rstrip('\n')
+	else:
+		file = open('api2.txt', 'w')
+		hunter_api = input("[+] Please enter a valid Hunter API key to continue (Get from Hunter.io): ")
+		file.write(hunter_api)
+		print("[+] File written: ./api2.txt")
+		file.close()
+
+	def hunter_email_finder():
+		email_domain = input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
+		first_name = input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
+		last_name = input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
+		url = "https://api.hunter.io/v2/email-finder?domain="+ email_domain + "&first_name=" + first_name +"&last_name=" + last_name +"&api_key=" + hunter_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+		hunter_email_finder()
+elif option == "11":
+	print("\033[1;91m[!]NOTICE:\033[0m\033[1;93m To get a better metadata of the image please do not use images from whatsapp or social media platforms as they strip away metadata from images, also do not use screenshot images, USE IMAGES TAKEN FROM A DEVICE CAMERA THANK YOU [!]\033[0m")
+	print()
+	imagename = input("\033[1;91m[+]\033[0m\033[1;97m Enter Correct path of the image (JPEG ONLY): \033[0m")
+	print("")
+	print()
+	# open the image
+	exif_dict = piexif.load(imagename)
+	print(f'Metadata for {imagename}:')
+	for ifd in exif_dict:
+		print(f'{ifd}:')
+		for tag in exif_dict[ifd]:
+			tag_name = piexif.TAGS[ifd][tag]["name"]
+			tag_value = exif_dict[ifd][tag]
+			
+			if isinstance(tag_value, bytes):
+				tag_value = tag_value[:10]
+			print(f'\t{tag_name:25}: {tag_value}')
+	print()
+
+		
+elif option == "12":
+	email_add = input("\033[1;91m[+]\033[0m\033[1;97mEnter email: \033[0m")
+	url = "https://api.twitter.com/i/users/email_available.json?email=" + email_add 
+	request = requests.get(url)
+	txt = request.text
+	parsed = json.loads(txt)
+	print(json.dumps(parsed, indent=2, sort_keys=True))
+			
+elif option == "13":
+	import resolver
+	import threading
+
+	domain = input("\033[1;91m[+]\033[0m\033[1;97mEnter domain name (without www): \033[0m")
+	file_path = input("\033[1;91m[+]\033[0m\033[1;97mPath of subdomains lists (Get from my github): \033[0m")
+	
+	def check_host(self, host):
+		is_valid = False
+		Resolver = dns.resolver.Resolver()
+		Resolver.nameservers = ['1.1.1.1', '1.0.0.1']
+		self.lock.acquire()
+		try:
+			ip = Resolver.query(host, 'A')[0].to_text()
+			if ip:
+				if self.verbose:
+					self_print_("%s%: %s%" % (R, self.engine_name, W, host))
+					is_valid = True
+					self.live_subdomains.append(host)
+		except:
+			pass
+			self.lock.release()
+			return is_valid
+	sub_list = open(file_path).read()
+	subs = sub_list.splitlines()
+	
+	for sub in subs:
+		domain = f"http://{sub}.{domain}"
+		
+		try:
+			requests.get(domain)
+		except requests.ConnectionError:
+			pass
+		else:
+			print("\033[1;94m[+]\033[0m Valid Subdomain: ",domain)
+	def domain(self):
+		sleep(0.2)
+	def __domain__(self):
+		t.threading.Thread(target=self.domain)
+		t.start()
+
+elif option == "u":
+	update()
 elif option == "q":
 	print()
 	exit
