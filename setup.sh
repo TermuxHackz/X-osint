@@ -99,10 +99,8 @@ printf "\e[1;94mSetting up environment for Linux .. \e[0m\n"
 sleep 1
 echo
 sudo cp -r xosint.py /usr/local/bin
-sudo cp -r subdomains.txt /usr/local/bin
 cd /usr/local/bin && sudo mv xosint.py xosint
 cd /usr/local/bin && sudo chmod u+x xosint
-cd /usr/local/bin && sudo chmod u+x subdomains.txt
 cd $HOME && sudo rm -rf X-osint
  printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Linux Terminal To use X-osint\e[0m\n"
  echo
