@@ -13,6 +13,15 @@ This is an osint tool which gathers useful and yet credible valid information ab
   1) IP Address information gathering
   2) Email Address information gathering 
   3) Phone number information gathering 
+  4) Host finding
+  5) Ports finding
+  6) Subdomain Enumeration
+  7) CVE Exploits Finder
+  8) Email Finder
+  9) Exploit Open Source Vulnerability Database 
+  10) DNS Lookup
+  11) DNS Reverse
+  And many more...
   ```
   <b>MANY OTHER FEATURES SOON TO COME </b>
 
@@ -110,6 +119,42 @@ cd X-osint
 chmod +x *
 bash setup.sh
 ```
+# How to update Automatically (if your running version 2.0 of X-Osint)
+
+<h4>For Termux</h4>
+
+```
+cd $HOME
+
+xosint
+
+And then from the menu Type "u" Without the quotes
+
+```
+
+<h4> For linux</h4>
+
+```
+cd $HOME
+
+sudo xosint
+
+And from the menu Type "u" without the quotes
+
+```
+
+<h3>
+NOTICE
+</h3>
+<p>If you are using the Subdomains feature and it ask for a word list, please download from <a href="https://www.mediafire.com/file/k60ooi301s4vkfo/subdomains.txt/file" target="_blank">here</a> and then extract the zip, make sure you know the location where it is kept, then proceed with using subdomain</p>
+
+# API
+Get your various API keys
+#### 1) Shodan (https://shodan.io) (Number 4 - 9 from my tool will require a shodan API key, Sign up on shodan and paste your API and begin to use flawlessly)
+
+#### 2) Hunter (https://hunter.io)
+
+<hr>
 
 # How to create a desktop Launcher for X-osint in Linux
 #### 1) Go to your home desktop, right click then click on Create Launcher
