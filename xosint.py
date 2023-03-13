@@ -26,6 +26,7 @@ from PIL import Image
 from PIL.ExifTags import TAGS
 import piexif
 from prompt_toolkit import print_formatted_text, HTML
+from pathlib import Path
 
 RED = "\033[91m"
 GREEN = "\033[92m"
