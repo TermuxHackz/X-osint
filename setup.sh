@@ -124,9 +124,6 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
 sudo pip install imdbpy
 echo
-echo -e "\033[1;91m[*]\033[1;97m Removing Google\033[0m"
-sudo python3 -m pip uninstall google -y
-echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
 sudo pip install prompt-toolkit
 echo
