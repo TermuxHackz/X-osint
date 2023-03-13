@@ -12,6 +12,7 @@ echo -e "\033[1;91m
 ░░   ░▒ ░  ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
  ░    ░  ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
  ░    ░      ░ ░        ░   ░           ░     
+   An Open Source Intelligence Framework  
      Created by: AnonyminHack5
      Team: TermuxHackz Society
  Version: 2.0
@@ -56,6 +57,15 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing piexif\033[0m"
 pip install piexif
 echo
+echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
+pip install google
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing google-search\033[0m" 
+pip install googlesearch-python
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m"
+pip install imdbpy
+echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
 cp -r xosint.py $PREFIX/bin
@@ -94,6 +104,15 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing piexif\033[0m"
 sudo pip install piexif
 sleep 1
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
+sudo pip install google
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
+sudo pip install imdbpy
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing google-search\033[0m" 
+sudo pip install googlesearch-python
 echo
 printf "\e[1;94mSetting up environment for Linux .. \e[0m\n"				
 sleep 1

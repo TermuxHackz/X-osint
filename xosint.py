@@ -2,18 +2,43 @@
 
   
  #Importing modules and libraries
+from __future__ import print_function
+try:
+    from googlesearch import search
+
+except ImportError:
+    print("[!] Google module not found, Kindly install by typing \033[1;94mpip3 install google\033[0m and try again [!]")
+    exit()
+
+
+import argparse
+from smtplib import SMTP, SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException
+from email.mime.multipart import MIMEMultipart
 import os
 import time
 import socket
 import requests
+import imdb
 from time import sleep
 import sys
 import json
 from PIL import Image
 from PIL.ExifTags import TAGS
 import piexif
+from prompt_toolkit import print_formatted_text, HTML
 
-banner = """\033[1;91m
+RED = "\033[91m"
+GREEN = "\033[92m"
+BLUE = "\033[94m"
+WHITE = "\033[0;37m"
+
+class colors:
+    CRED2 = "\33[91m"
+    CBLUE2 = "\33[94m"
+    ENDC = "\033[0m"
+
+
+banner = ("""
 ▒██   ██▒ ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
 ▒▒ █ █ ▒░▒██▒  ██▒▒██    ▒ ▓██▒ ██ ▀█   █ ▓  ██▒ ▓▒
 ░░  █   ░▒██░  ██▒░ ▓██▄   ▒██▒▓██  ▀█ ██▒▒ ▓██░ ▒░
@@ -23,32 +48,43 @@ banner = """\033[1;91m
 ░░   ░▒ ░  ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
  ░    ░  ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
  ░    ░      ░ ░        ░   ░           ░          
-                            
+   An Open Source Intelligence Framework                          
         Created by: AnonyminHack5
         Team: TermuxHackz Society
         	Version: 2.0
-\033[0m"""
+""")
+for col in banner:
+    print(colors.CRED2 + col, end="")
+    sys.stdout.flush()
+    time.sleep(0.0025)
 
-main_menu = """
+
+main_menu = ("""
 	\033[1;91m[??] Choose an option:
-	\033[1;91m[1] \033[1;97m IP Address Information
-	\033[1;91m[2] \033[1;97m Email Address Information
-	\033[1;91m[3] \033[1;97m Phone Number Information
-	\033[1;91m[4] \033[1;97m Host Search
-	\033[1;91m[5] \033[1;97m Ports
-	\033[1;91m[6] \033[1;97m Exploit CVE
-	\033[1;91m[7] \033[1;97m Exploit Open Source Vulnerability Database 
-	\033[1;91m[8] \033[1;97m DNS Lookup
-	\033[1;91m[9] \033[1;97m DNS Reverse
-        \033[1;91m[10] \033[1;97mEmail Finder
-        \033[1;91m[11] \033[1;97mExtract Metadata from image
-        \033[1;91m[12]\033[1;97m Check Twitter Status
-        \033[1;91m[13]\033[1;97m Subdomain Enumeration
-	\033[1;91m[u] \033[1;97m Update X-osint
-	\033[1;91m[0] \033[1;97m About
-	\033[1;91m[q] \033[1;97m Quit
+	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m IP Address Information
+	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information
+	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Phone Number Information
+	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Host Search
+	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Ports
+	\033[1;91m[\033[1;33;40m6\033[0m\033[1;91m] \033[1;97m Exploit CVE
+	\033[1;91m[\033[1;33;40m7\033[0m\033[1;91m] \033[1;97m Exploit Open Source Vulnerability Database 
+	\033[1;91m[\033[1;33;40m8\033[0m\033[1;91m] \033[1;97m DNS Lookup
+	\033[1;91m[\033[1;33;40m9\033[0m\033[1;91m] \033[1;97m DNS Reverse
+        \033[1;91m[\033[1;33;40m10\033[0m\033[1;91m] \033[1;97mEmail Finder
+        \033[1;91m[\033[1;33;40m11\033[0m\033[1;91m] \033[1;97mExtract Metadata from image
+        \033[1;91m[\033[1;33;40m12\033[0m\033[1;91m]\033[1;97m Check Twitter Status
+        \033[1;91m[\033[1;33;40m13\033[0m\033[1;91m]\033[1;97m Subdomain Enumeration
+        \033[1;91m[\033[1;33;40m14\033[0m\033[1;91m]\033[1;97m Google Dork Hacking
+        \033[1;91m[\033[1;33;40m15\033[0m\033[1;91m]\033[1;97m SMTP Analysis
+        \033[1;91m[\033[1;33;40m16\033[0m\033[1;91m]\033[1;97m Movie Database OSINT
+        \033[1;91m[\033[1;33;40mr\033[0m\033[1;91m] \033[1;97m Report bugs
+	\033[1;91m[\033[1;33;40mu\033[0m\033[1;91m] \033[1;97m Update X-osint
+	\033[1;91m[\033[1;33;40m0\033[0m\033[1;91m] \033[1;97m About
+	\033[1;91m[\033[1;33;40mq\033[0m\033[1;91m] \033[1;97m Quit
 	
-	"""
+	""")
+
+
 about = """\033[1;91m
 This is an osint tool which gathers useful and yet credible valid information about a phone number, user email address and ip address and more to come in other future updates
 \033[0m"""
@@ -214,6 +250,45 @@ def phone_info():
 	sleep(0.1)
 	print("\033[1;91m➤\033[1;97m Status Code    : " + str(phe.status_code) )
 	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Valid          : " + str(phe.json() ['valid']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m VOIP           : " + str(phe.json() ['VOIP']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Active         : " + str(phe.json() ['active']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Active Status  : " + str(phe.json() ['active_status']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Carrier        : " + str(phe.json() ['carrier']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m City           : " + str(phe.json() ['city']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Country        : " + str(phe.json() ['country']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Dialing Code   : " + str(phe.json() ['dialing_code']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Line Type      : " + str(phe.json() ['line_type']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Local Format   : " + str(phe.json() ['local_format']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m MCC            : " + str(phe.json() ['mcc']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Name           : " + str(phe.json() ['name']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Prepaid        : " + str(phe.json() ['prepaid']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m SMS Domain     : " + str(phe.json() ['sms_domain']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m SMS E-mail     : " + str(phe.json() ['sms_email']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Spammer        : " + str(phe.json() ['spammer']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Success        : " + str(phe.json() ['success']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m TimeZone       : " + str(phe.json() ['timezone']))
+	sleep(0.1)
+	print("\033[1;91m➤\033[1;97m Zip Code       : " + str(phe.json() ['zip_code']))
+	sleep(0.1)
+	print()
 	print("\033[1;91m➤\033[1;97m Success        : " + str(phe.json() ['success']))
 	sleep(0.1)
 	print()
@@ -255,19 +330,28 @@ def update():
 		os.system("rm xosint")
 		print("\033[1;97m[+] Validating installation....\033[0m\n")
 		sleep(0.1)
-		os.system("cd $HOME")
-		os.system("git clone https://github.com/TermuxHackz/X-osint")
-		print("\033[1;97m[+] Granting permissions.....\033[0m\n")
-		os.system("cd X-osint")
-		os.system("chmod +x *")
-		sleep(0.5)
-		print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
-		sleep(0.5)
-		print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
-		print("\033[1;97m[+] Update completed.....\033[0m\n")
-		sleep(2)
-		os.system("cd $HOME && cd X-osint")
-		os.system("bash setup.sh")
+		path_to_file = '/$PREFIX/bin/xosint'
+		path = Path(path_to_file)
+		if path.is_file():
+			print(f'The file {path_to_file} exists, Validation failed, Kindly update manually')
+			time.sleep(1)
+			exit()
+		else:
+			print(f'The file {path_to_file} doesnt exists, Validation Successful, Automatic update Completed')
+			time.sleep(0.9)
+			os.system("cd $HOME")
+			os.system("git clone https://github.com/TermuxHackz/X-osint")
+			print("\033[1;97m[+] Granting permissions.....\033[0m\n")
+			os.system("cd X-osint")
+			os.system("chmod +x *")
+			sleep(0.5)
+			print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
+			sleep(0.5)
+			print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
+			print("\033[1;97m[+] Update completed.....\033[0m\n")
+			sleep(2)
+			os.system("cd $HOME && cd X-osint")
+			os.system("bash setup.sh")
 	elif update_terminal == "2":
 		print("\033[1;97m[+] Updating for linux......\033[0m")
 		print()
@@ -277,20 +361,27 @@ def update():
 		os.system("sudo rm xosint")
 		print("\033[1;97m[+] Validating installation....\033[0m\n")
 		sleep(0.5)
-		os.system("cd $HOME")
-		os.system("git clone https://github.com/TermuxHackz/X-osint")
-		print("")
-		print("\033[1;97m[+] Granting permissions.....\033[0m\n")
-		os.system("cd X-osint")
-		os.system("chmod +x *")
-		sleep(0.5)
-		print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
-		sleep(0.5)
-		print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
-		print("\033[1;97m[+] Update completed.....\033[0m\n")
-		sleep(2)
-		os.system("cd $HOME && cd X-osint")
-		os.system("bash setup.sh")
+		path_to_file = '/usr/local/bin/xosint'
+		path = Path(path_to_file)
+		if path.is_file():
+			print(f'The file {path_to_file} exists, Validation failed, Kindly update manually')
+			time.sleep(1)
+			exit()
+		else:
+			os.system("cd $HOME")
+			os.system("git clone https://github.com/TermuxHackz/X-osint")
+			print("")
+			print("\033[1;97m[+] Granting permissions.....\033[0m\n")
+			os.system("cd X-osint")
+			os.system("chmod +x *")
+			sleep(0.5)
+			print("\033[1;97m[+] Preparing Setup file.....\033[0m\n")
+			sleep(0.5)
+			print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
+			print("\033[1;97m[+] Update completed.....\033[0m\n")
+			sleep(2)
+			os.system("cd $HOME && cd X-osint")
+			os.system("bash setup.sh")
 	else:
 		print("Invalid input....KINDLY UPDATE...quiting..")
 		sleep(0.5)
@@ -419,15 +510,26 @@ elif option == "9":
 	shodan_dns_reverse()
 
 elif option == "10":
-	if os.path.exists("./api2.txt") and os.path.getsize("./api2.txt") > 0:
-		with open('api2.txt', 'r') as file:
+	def hunter_email_finder():
+		email_domain = input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
+		first_name = input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
+		last_name = input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
+		url = "https://api.hunter.io/v2/email-finder?domain="+ email_domain + "&first_name=" + first_name +"&last_name=" + last_name +"&api_key=" + hunter_api
+		request = requests.get(url)
+		txt = request.text
+		parsed = json.loads(txt)
+		print(json.dumps(parsed, indent=2, sort_keys=True))
+
+	if os.path.exists("./hunter_io_api.txt") and os.path.getsize("./hunter_io_api.txt") > 0:
+		with open('hunter_io_api.txt', 'r') as file:
 			hunter_api=file.readline().rstrip('\n')
 	else:
-		file = open('api2.txt', 'w')
+		file = open('hunter_io_api', 'w')
 		hunter_api = input("[+] Please enter a valid Hunter API key to continue (Get from Hunter.io): ")
 		file.write(hunter_api)
-		print("[+] File written: ./api2.txt")
+		print("[+] File written: ./hunter_io_api.txt")
 		file.close()
+		hunter_email_finder()
 
 	def hunter_email_finder():
 		email_domain = input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
@@ -438,7 +540,7 @@ elif option == "10":
 		txt = request.text
 		parsed = json.loads(txt)
 		print(json.dumps(parsed, indent=2, sort_keys=True))
-		hunter_email_finder()
+
 elif option == "11":
 	print("\033[1;91m[!]NOTICE:\033[0m\033[1;93m To get a better metadata of the image please do not use images from whatsapp or social media platforms as they strip away metadata from images, also do not use screenshot images, USE IMAGES TAKEN FROM A DEVICE CAMERA THANK YOU [!]\033[0m")
 	print()
@@ -508,7 +610,198 @@ elif option == "13":
 	def __domain__(self):
 		t.threading.Thread(target=self.domain)
 		t.start()
+#### Google Dorking Hacking 
 
+elif option == "14":
+		try:
+			## print_formatted_text(HTML('<b><u>;GOOGLE DORK HACKING </u></b>')) 
+			dork = input('\033[1;91m\n[+]\033[0m\033[1;97mEnter The Dork Search Query (eg: intext:"Index of /" +passwd): \033[0m')
+			amount = input("\033[1;91m[+]\033[0m\033[1;97mEnter The Number Of sites To dork (eg: 4): \033[0m")
+			print ("\n ")
+			requ = 0
+			counter = 0
+			for results in search(dork, tld="com", lang="en", num=int(amount), start=0, stop=None, pause=2):
+				counter = counter + 1
+				print ("[+] ", counter, results)
+				time.sleep(0.1)
+				requ += 1
+				if requ >= int(amount):
+					break
+			data = (counter, results)
+			time.sleep(0.1)
+			print("\n")
+			file = input('\033[1;91m[!]\033[0m\033[1;94mEnter name to save output as (eg: output.txt): \033[0m')
+			original_stdout = sys.stdout
+			try:
+				with open(file, 'w') as f:
+					sys.stdout = f
+					print(data)
+					print("\n")
+					sys.stdout = original_stdout
+					print("\033[1;97m[+]\033[0mFile has been saved as \033[0m" + file)
+			except:
+				print("\033[1;91m[!]Please enter a name to save the file as [!]\033[0m")
+				sys.exit(1)
+
+		except KeyboardInterrupt:
+			print ("\n")
+			print ("\033[1;91m[!] User Interruption Detected..!\033[0")
+			time.sleep(0.5)
+			print ("[•] Done... Exiting...")
+			sys.exit(1)
+			
+elif option == "r":
+	print("\033[1;91m[+]\033[1;97m Kindly take a screenshot or screenrecord of the error faced and mail them \nto me and i would give you feedback based on those bugs you have \nreported to me and fix them, Thank you \033[0m")
+	print("")
+	try:
+		report = input('\033[1;95mReport bug (y/n): \033[0m')
+		if report == "y":
+			try:
+				import webbrowser
+				webbrowser.open('mailto:AnonyminHack5@protonmail.com', new=1)
+			except ImportError:
+				print("\033[1;91m[!] Webbrowser module not found!!, Install using \033[0m\033[1;97mpip install webbrowser\033[0m")
+				print("[+] Try reporting bugs again ")
+				time.sleep(0.9)
+				sys.exit(1)
+		elif report == "n":
+			print("[+] Seems there wasnt any bugs for you to report, so why bother choosing to report bugs, lol ")
+			time.sleep(0.5)
+			sys.exit(1)
+		else:
+			print("\033[1;91m[!] Invalid Command!!!\033[0m")
+			time.sleep(0.1)
+			sys.exit(1)
+	except KeyboardInterrupt:
+		print ("\n")
+		print ("\033[1;91m[!] User Interruption Detected..!\033[0")
+		time.sleep(0.5)
+		sys.exit(1)
+elif option == "15":
+	def spoof(target,ports):
+		TestedPorts = []
+		if ("ports"=="*"):
+			TestedPorts = ['25','465','587','2525']
+			ports = "25, 465, 587 and 2525"
+		else:
+			TestedPorts = list(ports.split(","))
+			testuser = "testuser@mail.ca"
+			message = MIMEMultipart()
+			message["From"] = testuser
+			message["To"] = testuser
+			message["Subject"] = "test"
+			text = message.as_string()
+			print("\033[1;91m{}[!]\033[0m\033[1;97mLooking For Email Spooffing Vulnerability on port {}..... \033[0m\033[1;91m[!]\033[0m\n\033[94m".format(WHITE,ports))
+			for port in TestedPorts: 
+				print("{} Testing Email Spoofing on port {}.....\n\033[94m".format(WHITE,port))
+			try:
+				SMTP(target,port).sendmail(testuser,testuser,text)
+				print("{} The SMTP Server Targeted : {} is potentialy vulnerable to mail spoofing. Authentification don't seem to be required on port {} \033[0;37m \n".format(GREEN,target,port))
+			except (SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException):
+				print("{} Recipient error encountered. The SMTP Server Targeted: {} don't seem to be vunlerable to mail spoofing on port {} \033[0;37m \n ".format(BLUE,target,port))
+			except ConnectionRefusedError:
+				print("{} Connection refused by host {}. It don't seem to be vunlerable to mail spoofing on port {} \033[0;37m \n".format(BLUE,target,port))
+			except Exception:
+				print("{} Exception Occured on host {}. It don't seem to be vunlerable to mail spoofing on port {} \033[0;37m \n".format(BLUE,target,port))
+			except KeyboardInterrupt:
+				print("Stopping...")
+				exit()
+	def userenum (target,ports):
+		TestedPorts = []
+		if (ports =="*"):
+			TestedPorts = ['25','465','587','2525']
+			ports = "25, 465, 587 and 2525"
+		else:
+			TestedPorts = list(ports.split(","))
+			print("\033[1;91m{}[!]\033[0m\033[1;97m Looking For user enumeration vulnerability on port {}..... \033[0m\n\033[94m".format(WHITE,ports))
+		for port in TestedPorts:
+			print("\033[1;91m{}[!]\033[0m\033[1;997m Testing user enumeration on port {}.....\033[0m\n\033[94m".format(WHITE,port))
+		try:
+			verify = SMTP(target, port).verify("")
+			if verify[0] in [250, 252]:
+				print("{} The SMTP Server Targeted: {} is potentialy vulnerable to user enumeration on port {}. VRFY query responded status : {}  \033[0;37m \n".format(GREEN,target,port,verify[0]))
+			else:
+				print("{} The SMTP Server Targeted: {} don't seem to be vulberable to user enumeration on port {}. VRFY query responded statys : {}  \033[0;37m \n".format(BLUE,target,port,verify[0]))
+		except Exception:
+			print("{} Exception Occured on host {}. It don't seem to be vunlerable to user enumeration on port {}. \033[0;37m \n".format(BLUE,target,port))
+		except KeyboardInterrupt:
+			print("Stopping...")
+			exit()
+
+	target = input("\033[1;91m[+]\033[0m\033[1;97mEnter SMTP Server: \033[0m")
+	port = input('\033[1;91m[+]\033[0m\033[1;97mEnter port or type "*" to use all ports: \033[0m')
+	spoof(target,port)
+	userenum(target,port)
+
+### Movie Database OSINT
+elif option == "16":
+	os.system("clear")
+	print(banner)
+	print("\t\t\033[1;97mMOVIE DATABASE OSINT\033[0m")
+	movie_menu = ("""
+	\033[1;91m[??] Choose an option:
+	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m Movie Name
+	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Keyword
+	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Company Name of Movie
+	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Actor Name
+	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Check if Actor was starred in a Movie
+	\033[1;91m[\033[1;33;40mq\033[0m\033[1;91m] \033[1;97m Quit
+	""")
+	print(movie_menu)
+	select = input("\033[1;91m[~]\033[0m\033[1;97m Select an option: \033[0m")
+	if select == "1":
+		ia = imdb.IMDb()
+		movie_name = input("\033[1;91m[+]\033[0m\033[1;94mEnter name of movie: \033[0m")
+		search = ia.search_movie(movie_name)
+		#print result
+		for i in search:
+			print(i)
+	elif select == "2":
+		ia = imdb.IMDb()
+		keyword = input('\033[1;91m[+]\033[0m\033[1;94mEnter movie keyword eg (Heaven): \033[0m')
+		#search for the keyword
+		search = ia.get_keyword(keyword)
+		#print the result
+		print(len(search))
+		print(search[0])
+	elif select == "3":
+		ia = imdb.IMDb()
+		company_name = input('\033[1;91m[+]\033[0m\033[1;94mSearch Company name eg: (Marvel Studios): \033[0m')
+		search = ia.search_company(company_name)
+		for i in search:
+			print(i)
+	elif select == "4":
+		ia = imdb.IMDb()
+		name = input('\033[1;91m[+]\033[0m\033[1;94mEnter actor name: \033[0m')
+		search = ia.search_person(name)
+		
+		for i in search:
+			print(i)
+	elif select == "5":
+		ia = imdb.IMDb()
+		code = input('\033[1;91m[+]\033[0m\033[1;94mEnter Movie ID (eg: 4434004 or 1187043: \033[0m')
+		movie = ia.get_movie(code)
+		code2 = input('\033[1;91m[+]\033[0m\033[1;94mEnter Actor ID (eg: 1372788): \033[0m')
+		person = ia.get_person(code2)
+		print(movie)
+		print("\033[1;91m[*]\033[0m\033[1;94mGetting results if actor starred in a movie \033[0m")
+		time.sleep(2)
+		print("\033[1;97m====================================\033[0m")
+		if person in movie:
+			print("\033[1;94mYes, Actor Starred in this movie\033[0m")
+			time.sleep(0.1)
+			sys.exit(1)
+		else:
+			print("\033[1;91mNo, Actor Didnt Star in this movie\033[0m")
+			time.sleep(0.1)
+			sys.exit(1)
+	elif select == "q":
+		exit()
+
+	else:
+		print("\033[1;91m[!] Not part of the options..try again \033[0m")
+		exit
+		
 elif option == "u":
 	update()
 elif option == "q":
@@ -521,4 +814,4 @@ else:
 	print()
 	print("[*] Invalid Input..try again....")
 	sleep(0.9)
-	os.system("xosint ||sudo xosint")
+	exit()
