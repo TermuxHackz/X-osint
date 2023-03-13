@@ -66,6 +66,9 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m"
 pip install imdbpy
 echo
+echo -e "\033[1;91m[*]\033[1;97m Installing IMDbv2\033[0m"
+pip install IMDbPY
+echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
 cp -r xosint.py $PREFIX/bin
@@ -110,6 +113,9 @@ sudo pip install google
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
 sudo pip install imdbpy
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing IMDbv2\033[0m"
+sudo pip install IMDbPY
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google-search\033[0m" 
 sudo pip install googlesearch-python
