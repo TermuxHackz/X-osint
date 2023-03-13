@@ -2,16 +2,15 @@
 
   
  #Importing modules and libraries
+
 from __future__ import print_function
 try:
     from googlesearch import search
 
 except ImportError:
-    print("[!] Google module not found, Kindly install by typing \033[1;94mpip3 install google\033[0m and try again [!]")
-    exit()
+    print("")
 
 
-import argparse
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException
 from email.mime.multipart import MIMEMultipart
 import os
@@ -614,12 +613,15 @@ elif option == "13":
 
 elif option == "14":
 		try:
+			os.system("python -m pip uninstall googlesearch-python -y")
 			## print_formatted_text(HTML('<b><u>;GOOGLE DORK HACKING </u></b>')) 
 			dork = input('\033[1;91m\n[+]\033[0m\033[1;97mEnter The Dork Search Query (eg: intext:"Index of /" +passwd): \033[0m')
 			amount = input("\033[1;91m[+]\033[0m\033[1;97mEnter The Number Of sites To dork (eg: 4): \033[0m")
 			print ("\n ")
+			
 			requ = 0
 			counter = 0
+			
 			for results in search(dork, tld="com", lang="en", num=int(amount), start=0, stop=None, pause=2):
 				counter = counter + 1
 				print ("[+] ", counter, results)
@@ -627,9 +629,9 @@ elif option == "14":
 				requ += 1
 				if requ >= int(amount):
 					break
-			data = (counter, results)
-			time.sleep(0.1)
-			print("\n")
+				data = (counter, results)
+				time.sleep(0.1)
+				print("\n")
 			file = input('\033[1;91m[!]\033[0m\033[1;94mEnter name to save output as (eg: output.txt): \033[0m')
 			original_stdout = sys.stdout
 			try:
