@@ -331,7 +331,9 @@ def update():
 			time.sleep(1)
 			exit()
 		else:
-			print(f'The file {path_to_file} doesnt exists, Validation Successful, Automatic update Completed')
+			print(f'The file {path_to_file} doesnt exists, Validation Successful')
+			time.sleep(0.5)
+			print("\033[1;91m[!]\033[0m\033[1;97mAutomatic update Completed\0330m\n")
 			time.sleep(0.9)
 			os.system("cd $HOME")
 			os.system("git clone https://github.com/TermuxHackz/X-osint")
