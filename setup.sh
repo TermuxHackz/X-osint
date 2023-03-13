@@ -67,10 +67,7 @@ echo -e "\033[1;91m[*]\033[1;97m Installing libxslt\033[0m"
 pkg install libxslt
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m"
-pip install imdbpy
-echo
-echo -e "\033[1;91m[*]\033[1;97m Installing IMDbv2\033[0m"
-pip install IMDbPY
+#pip install imdbpy
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
 pip install prompt-toolkit
