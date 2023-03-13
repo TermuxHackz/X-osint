@@ -57,14 +57,16 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing piexif\033[0m"
 pip install piexif
 echo
+echo -e "\033[1;91m[*]\033[1;97m Removing old packages\033[0m" 
+python3 -m pip uninstall googlesearch-python -y
+python3 -m pip uninstall google-search -y
+python3 -m pip uninstall google -y
+echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
 pip install google
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing libxslt\033[0m"
 pkg install libxslt
-echo
-echo -e "\033[1;91m[*]\033[1;97m Removing Google search python\033[0m"
-python3 -m pip uninstall googlesearch-python -y
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m"
 pip install imdbpy
@@ -111,14 +113,19 @@ echo -e "\033[1;91m[*]\033[1;97m Installing piexif\033[0m"
 sudo pip install piexif
 sleep 1
 echo
+echo -e "\033[1;91m[*]\033[1;97m Removing old packages\033[0m" 
+sudo python3 -m pip uninstall googlesearch-python -y
+sudo python3 -m pip uninstall google-search -y
+sudo python3 -m pip uninstall google -y
+echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
 sudo pip install google
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
 sudo pip install imdbpy
 echo
-echo -e "\033[1;91m[*]\033[1;97m Removing Google search python\033[0m"
-sudo python3 -m pip uninstall googlesearch-python -y
+echo -e "\033[1;91m[*]\033[1;97m Removing Google\033[0m"
+sudo python3 -m pip uninstall google -y
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
 sudo pip install prompt-toolkit

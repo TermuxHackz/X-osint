@@ -3,13 +3,8 @@
   
  #Importing modules and libraries
 
-from __future__ import print_function
-try:
-    from googlesearch import search
 
-except ImportError:
-    print("")
-
+from googlesearch import search
 
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException
 from email.mime.multipart import MIMEMultipart
@@ -612,7 +607,6 @@ elif option == "13":
 
 elif option == "14":
 		try:
-			os.system("python3 -m pip uninstall googlesearch-python -y")
 			## print_formatted_text(HTML('<b><u>;GOOGLE DORK HACKING </u></b>')) 
 			dork = input('\033[1;91m\n[+]\033[0m\033[1;97mEnter The Dork Search Query (eg: intext:"Index of /" +passwd): \033[0m')
 			amount = input("\033[1;91m[+]\033[0m\033[1;97mEnter The Number Of sites To dork (eg: 4): \033[0m")
