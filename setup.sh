@@ -69,6 +69,9 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDbv2\033[0m"
 pip install IMDbPY
 echo
+echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
+pip install prompt-toolkit
+echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
 cp -r xosint.py $PREFIX/bin
@@ -119,6 +122,9 @@ sudo pip install IMDbPY
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google-search\033[0m" 
 sudo pip install googlesearch-python
+echo
+echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
+sudo pip install prompt-toolkit
 echo
 printf "\e[1;94mSetting up environment for Linux .. \e[0m\n"				
 sleep 1
