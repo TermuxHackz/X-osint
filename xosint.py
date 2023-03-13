@@ -658,7 +658,7 @@ elif option == "r":
 		if report == "y":
 			try:
 				import webbrowser
-				webbrowser.open('mailto:AnonyminHack5@protonmail.com', new=1)
+				webbrowser.open('mailto:?to=AnonyminHack5@protonmail.com&subject=X-osint-bugs', new=1)
 			except ImportError:
 				print("\033[1;91m[!] Webbrowser module not found!!, Install using \033[0m\033[1;97mpip install webbrowser\033[0m")
 				print("[+] Try reporting bugs again ")
