@@ -358,8 +358,7 @@ def update():
 		print()
 		sleep(0.1)
 		os.system("cd $HOME")
-		os.system("cd /usr/local/bin")
-		os.system("sudo rm xosint")
+		os.system("cd /usr/local/bin && sudo rm xosint")
 		print("\033[1;97m[+] Validating installation....\033[0m\n")
 		sleep(0.5)
 		path_to_file = '/usr/local/bin/xosint'
