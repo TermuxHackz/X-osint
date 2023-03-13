@@ -184,6 +184,33 @@ Works for Termux and Linux
 Tested 
 ```
 
+# Google Dork Hacking
+X-osint provides a way by which you can use Google for hacking once you know how to the particular search queries to perform, I have provided some useful google dork queries in this repo code, kindly view and use. Thank you.
+
+# Movie Database
+X-Osint uses the lastest information from IMDB To give search results based on you choice of options to give you information on Actor, Movie Name, Keyword names, Company name of the Movie, and also check if the actor was starred in the Movie or not
+
+# SMTP Analysis
+X-osint is able to perform an SMTP Analysis and enumerate if an SMTP server is vulnerable or not
+
+More features are still to come..Stay Tuned
+
+
+> Fixed Bugs
+```
+Fixed updating
+
+Fixed Number 3 Option error
+
+Changed Banner
+
+Changed User interface
+
+Added Features
+
+Improved Speed
+
+
 # Buy me a coffee
 <img src="images.png"/>
 Love my work and wish to support me, Buy me a coffee <a href="https://www.buymeacoffee.com/AnonyminHack5" target="_blank">here </a>
