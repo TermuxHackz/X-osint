@@ -63,6 +63,9 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google-search\033[0m" 
 pip install googlesearch-python
 echo
+echo -e "\033[1;91m[*]\033[1;97m Installing libxslt\033[0m"
+pkg install libxslt
+echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m"
 pip install imdbpy
 echo
