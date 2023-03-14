@@ -169,8 +169,9 @@ Tested
 # Demo
 Here is a video demo below on how to install X-osint, you can also download it.
 
-[X-osint](Video/Install-Xosint.mp4)
-
+[Download X-osint 📁](Video/Install-Xosint.mp4)
+<br>
+Youtube url link 🔗: <a href="https://youtu.be/ikU1RHNVVuk">Link</a>
 
 # Google Dork Hacking
 X-osint provides a way by which you can use Google for hacking once you know how to the particular search queries to perform, I have provided some useful google dork queries in this repo code, kindly view and use. Thank you.
