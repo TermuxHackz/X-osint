@@ -167,19 +167,6 @@ Works for Termux and Linux
 Tested 
 ```
 # Demo
-<video width="500px" height="500px" 
-
-        controls="controls"/> 
-
-         
-
-        <source src="Install-Xosint.mp4" 
-
-            type="video/mp4"> 
-
-    </video> 
-
-
 
 # Google Dork Hacking
 X-osint provides a way by which you can use Google for hacking once you know how to the particular search queries to perform, I have provided some useful google dork queries in this repo code, kindly view and use. Thank you.
