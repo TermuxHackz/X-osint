@@ -346,9 +346,9 @@ def update():
 			print("\033[1;97m[+] Setup file ready!!.....Starting in 2s...\033[0m\n")
 			print("\033[1;97m[+] Update completed.....\033[0m\n")
 			sleep(2)
-    os.system("cd $HOME")
-   os.system("cd X-osint && bash setup.sh")
-
+			
+		
+			
 
 	elif update_terminal == "2":
 		print("\033[1;97m[+] Updating for linux......\033[0m")
