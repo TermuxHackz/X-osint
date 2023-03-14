@@ -36,23 +36,6 @@ Internet Connection
 ``` 
 <hr>
 
-# NOTE
-<h5>YOU MAY ENCOUNTER ERROR WHEN TRYING TO INSTALL FOR LINUX OR TERMUX KINDLY BE AT REST AS I AM WORKING ON A FIX AND I WOULD UPDATE THIS README FILE AND YOU CAN RECLONE AGAIN AND DELETE THE OLD REPO USING: 
-
-```
-cd $HOME
-rm -rf X-osint
-```
-AND REINSTALL USING
-```
-git clone https://github.com/TermuxHackz/X-osint
-cd X-osint
-chmod +x *
-bash setup.sh
-```
-THANKS FOR BEARING WITH ME
-</h5>
-
 # How to Update Manually
 This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
 <h5><u>How to Update For Termux</u></h5>
