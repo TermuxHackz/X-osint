@@ -169,9 +169,7 @@ Tested
 # Demo
 Here is a video demo below on how to install X-osint, you can also download it.
 
-<iframe width="420" height="315" src="https://youtu.be/ikU1RHNVVuk?autoplay=1&mute=1">
-
-</iframe>
+[X-osint](Install-Xosint.mp4)
 
 
 # Google Dork Hacking
