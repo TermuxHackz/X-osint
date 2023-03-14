@@ -757,7 +757,7 @@ elif option == "16":
 			print(i)
 	elif select == "2":
 		ia = imdb.IMDb()
-   print('[+] If its a two word keyword, kindly add an hyphen in between and use eg (War-room, Captain-america, etc)')
+print('[+] If its a two word keyword, kindly add an hyphen in between and use eg (War-room, Captain-america, etc)')
 		keyword = input('\033[1;91m[+]\033[0m\033[1;94mEnter movie keyword eg (Heaven): \033[0m')
 		#search for the keyword
 		search = ia.get_keyword(keyword)
