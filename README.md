@@ -169,7 +169,7 @@ Tested
 # Demo
 Here is a video demo below on how to install X-osint, you can also download it.
 
-[X-osint](Install-Xosint.mp4)
+[X-osint](Video/Install-Xosint.mp4)
 
 
 # Google Dork Hacking
