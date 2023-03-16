@@ -14,8 +14,8 @@ echo -e "\033[1;91m
  ░    ░      ░ ░        ░   ░           ░     
    An Open Source Intelligence Framework  
      Created by: AnonyminHack5
-     Team: TermuxHackz Society
- Version: 2.0
+      Team: TermuxHackz Society
+        Version: 2.0
    \033[0m"
    echo
 	printf "\e[1;34m\tSelect your terminal to install X-osint \e[0m\n"
