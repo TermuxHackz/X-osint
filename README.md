@@ -12,7 +12,7 @@ This is an osint tool which gathers useful and yet credible valid information ab
   <hr>
   
   # Menu
-<img src="Demo/X-osintv2.1.1.png" alt="X-osintv2.1" float="center"/>
+<img src="images/X-osintv2.1.1.png" alt="X-osintv2.1" float="center"/>
 
   # Features
   1) IP Address information gathering
