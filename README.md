@@ -236,7 +236,7 @@ More features are still to come..Stay Tuned
 
 
 # Buy me a coffee
-<img src="images/images.png"/>
+<img src="images/images.png"/><br>
 Love my work and wish to support me, Buy me a coffee <a href="https://www.buymeacoffee.com/AnonyminHack5" target="_blank">here </a>
 
 ## Contributing
