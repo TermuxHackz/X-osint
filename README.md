@@ -169,7 +169,7 @@ Tested
 # Demo
 Here is a video demo below on how to install X-osint, you can also download it.
 
-[![Install X-osint 📁](X-osintv2.1.png)](https://youtu.be/bewlCOJpAXg)
+[![Install X-osint 📁](Video/install.gif)](https://youtu.be/bewlCOJpAXg)
 
 <br>
 Youtube url link 🔗: <a href="https://youtu.be/ikU1RHNVVuk">Link</a>
