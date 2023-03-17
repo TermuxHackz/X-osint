@@ -47,7 +47,7 @@ And some other python packages
 
 <hr>
 
-# How to Update Manually
+# How to Update Manually (For any version)
 This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
 <h5><u>How to Update For Termux</u></h5>
 <b>ALSO TYPE THE DOLLAR SIGN </b>
@@ -125,7 +125,7 @@ cd X-osint
 chmod +x *
 bash setup.sh
 ```
-# How to update Automatically (if your running version 2.1 of X-Osint)
+# How to update Automatically (if your using version 2.1 of X-Osint and above)
 
 <h4>For Termux</h4>
 
