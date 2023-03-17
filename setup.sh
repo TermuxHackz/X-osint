@@ -68,9 +68,6 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
 pip install google
 echo
-echo -e "\033[1;91m[*]\033[1;97m Installing tor\033[0m" 
-pkg install tor -y
-echo
 echo -e "\033[1;91m[*]\033[1;97m Installing libxslt\033[0m"
 pkg install libxslt
 echo
@@ -155,9 +152,6 @@ sudo python3 -m pip uninstall google -y
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
 sudo pip install google
-echo
-echo -e "\033[1;91m[*]\033[1;97m Installing tor\033[0m" 
-sudo apt install tor -y
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
 pip install imdbpy
