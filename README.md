@@ -101,7 +101,9 @@ Here is a video demonstration below that shows how to install X-osint in your va
 [![Install X-osint2.1](Demo/install.gif)](https://github.com/TermuxHackz/X-osint/blob/master/Demo/Install-Xosint.mp4)
 
 <h5>Youtube Video Demo here</h5>
-[!](https://youtu.be/ikU1RHNVVuk")
+<a href="https://www.youtube.com/watch?feature=player_embedded&v=ikU1RHNVVuk" target="_blank">
+  <img src="images/X-osintv2.1.1.png" alt="Watch the Video installation" width="340" height="180" border="10" />
+</a>
 
 # Installation for Termux
 ```
