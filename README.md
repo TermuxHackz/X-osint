@@ -49,6 +49,7 @@ And some other python packages
 # How to Update Manually
 This tool would be updated regularly or as time progresses to improve it, fix more bugs and add so many other features, I would be showing you how to update it
 <h5><u>How to Update For Termux</u></h5>
+<b>ALSO TYPE THE DOLLAR SIGN </b>
 
 #### 1) Type:
 > cd $HOME
@@ -72,6 +73,7 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 <b>And your all done!!!..and updated </b>
 
 <h3><u>How to Update for Linux</u></h3>
+<b>ALSO TYPE THE DOLLAR SIGN </b>
 
 #### 1) Type:
 > cd $HOME
