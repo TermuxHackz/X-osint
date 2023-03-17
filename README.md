@@ -243,7 +243,7 @@ Love my work and wish to support me, Buy me a coffee <a href="https://www.buymea
 Feel free to clone this project. For major changes, please open an issue first to discuss what you would like to change or add, thank you!!.
 
 ## Credits
-Some of the modules here and APIs used for the creation of X-osint, i would have to give them create
+Some of the modules here and APIs used for the creation of X-osint, got the idea from them, and so i would like to give them credit
 - [1] Pixellbubble
 - [2] C3n7ral051nt4g3ncy
 - [3] SpiderAnonGreyHat
