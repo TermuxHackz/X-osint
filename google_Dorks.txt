@@ -6,6 +6,7 @@
 " ActiveKB v1.5 Copyright Â©"
 " Dumping data for table (username|user|users|password)"
 " Dumping data for table"
+php?id=28'
 " End Stealer " ext:txt
 " Powered by JTL-Shop 2"
 " Powered by Pie Cart Pro "
