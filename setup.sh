@@ -149,12 +149,12 @@ pip install piexif
 sleep 1
 echo
 echo -e "\033[1;91m[*]\033[1;97m Removing old packages\033[0m" 
-python3 -m pip uninstall googlesearch-python -y
-python3 -m pip uninstall google-search -y
-python3 -m pip uninstall google -y
+sudo python3 -m pip uninstall googlesearch-python -y
+sudo python3 -m pip uninstall google-search -y
+sudo python3 -m pip uninstall google -y
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
-pip install google
+sudo pip install google
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing tor\033[0m" 
 sudo apt install tor -y
