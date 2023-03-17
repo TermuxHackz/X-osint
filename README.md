@@ -173,7 +173,7 @@ Command: sudo xosint
 
 Working Directory: /usr/local/bin
 
-Icon: Click the No icon button and add an icon, and then Go to my github, <a href="https://github.com/TermuxHackz/X-osint/Icons">and download the .ico image there</a> then select that as your Icon and thats it
+Icon: Click the No icon button and add an icon, and then Go to my github, <a href="https://github.com/TermuxHackz/X-osint/tree/master/Icons">and download the .ico image there</a> then select that as your Icon and thats it
 
 [![Create Launcher](Demo/create-launcher.gif)](https://github.com/TermuxHackz/X-osint/blob/master/Demo/create-launcher.mp4)
 
