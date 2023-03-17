@@ -83,47 +83,6 @@ for col in banner:
     sys.stdout.flush()
     time.sleep(0.0025)
 
-print("")
-print(Fore.GREEN + """\n\n		Which terminal do you use??
-      
-      		[1] Termux
-      		[2] Linux """)
-print("")
-terminal = input(Fore.WHITE + "Choose a terminal: ")
-if terminal == "1":
-    if isUpToDate("$PREFIX/bin/xosint", "https://github.com/TermuxHackz/X-osint/blob/master/xosint") == False:
-        print(RED + "\n[!]" + WHITE + " Oops!, This version of X-osint is out of date\n")
-        u_pdate = input(Fore.YELLOW + "Would you like to update?[y/n]: \033[0m").capitalize()
-        
-        if u_pdate == "Y":
-            print("")
-            os.system("cd $HOME")
-            os.system("cd $PREFIX/bin && rm xosint")
-            os.system("cd $HOME")
-            os.system("git clone https://github.com/TermuxHackz/X-osint")
-            os.system("cd X-osint && chmod +x *")
-            os.system("bash setup.sh")
-
-elif terminal == "2":
-    if isUpToDate("/usr/local/bin/xosint", "https://github.com/TermuxHackz/X-osint/blob/master/xosint") == False:
-        print(RED + "\n[!]" + WHITE + " Oops!, This version of X-osint is out of date\n")
-        u_pdate_1 = input(Fore.YELLOW + "Would you like to update?[y/n]: \033[0m").capitalize()
-        
-        if u_pdate_1 == "Y":
-            print("")
-            os.system("cd $HOME")
-            os.system("cd /usr/local/bin")
-            os.system("sudo rm xosint")
-            os.system("cd $HOME")
-            os.system("git clone https://github.com/TermuxHackz/X-osint")
-            os.system("cd X-osint && chmod +x *")
-            os.system("bash setup.sh")
-else:
-    print(RED + "[!]" + WHITE + " Not part of the options dawg!!!")
-    time.sleep(0.1)
-    exit()
-    
-        
 
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
