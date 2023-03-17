@@ -84,47 +84,6 @@ for col in banner:
     time.sleep(0.0025)
 
 print("")
-print("")
-#Check if Xosint is running latest version and change the isuptodate file
-if isUpToDate("xosint", "https://github.com/TermuxHackz/X-osint/blob/master/xosint") == False: ##Make sure i change this 
-    print(RED + "[!]" + WHITE + " Oops, This version is out of date \n")
-    u_pdate = input(Fore.YELLOW + "Would you like to update [y/n]: ").capitalize()
-    
-    if u_pdate == "Y":
-        print("")
-        print(Fore.GREEN + """Which terminal did you install X-osint into??
-              
-              [1] Termux
-              [2] Linux """)
-        print("")
-        try:
-            terminal = input(Fore.WHITE + "Choose a terminal: \033[1;92m")
-        
-            if terminal == "1":
-                os.system("cd $HOME")
-                os.system("cd $PREFIX/bin")
-                os.system("rm xosint")
-                os.system("cd $HOME")
-                os.system("git clone https://github.com/TermuxHackz/X-osint")
-                os.system("cd X-osint && chmod +x *")
-                os.system("bash setup.sh")
-            elif terminal == "2":
-                os.system("cd $HOME")
-                os.system("cd /usr/local/bin")
-                os.system("sudo rm xosint")
-                os.system("cd $HOME")
-                os.system("git clone https://github.com/TermuxHackz/X-osint")
-                os.system("cd X-osint && chmod +x *")
-                os.system("bash setup.sh")
-            else:
-                print(RED + "[!]" + WHITE + " Invalid Option....")
-                exit()
-        except KeyboardInterrupt:
-            print(	RED + "\n[!]" + WHITE + " CTRL C DETECTED !!!....")
-            print(RED + "[!]" + WHITE + " Kindly update to enjoy more features and minor bugs fixed!!!\033[0m")
-            time.sleep(0.5)
-            exit()
-
 
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
