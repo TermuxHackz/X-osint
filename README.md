@@ -8,8 +8,6 @@ This is an osint tool which gathers useful and yet credible valid information ab
   <img src="https://img.shields.io/badge/Made%20with-Python%20and%20bash-yellowgreen"/>
   <img src="https://img.shields.io/badge/Maintained-YES-green"/> <img src="https://img.shields.io/badge/Version-2.1-9cf"/>
   </center>
-  <br/>
-  
   </h2>
   <hr>
   
