@@ -107,7 +107,7 @@ Here is a video demonstration below that shows how to install X-osint in your va
   <img src="images/X-osintv2.1.1.png" alt="Watch the Video installation" width="340" height="180" border="10" />
 </a>
 
-# Installation for Termux
+# Installation 
 ```
 cd $HOME
 git clone https://github.com/TermuxHackz/X-osint
@@ -116,14 +116,7 @@ chmod +x *
 bash setup.sh
 ```
 
-# Installation for Linux
-```
-cd $HOME
-git clone https://github.com/TermuxHackz/X-osint
-cd X-osint
-chmod +x *
-bash setup.sh
-```
+
 # How to update Automatically (if your using version 2.1 of X-Osint and above)
 
 <h4>For Termux</h4>
