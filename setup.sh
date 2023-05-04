@@ -72,7 +72,7 @@ echo -e "\033[1;91m[*]\033[1;97m Installing libxslt\033[0m"
 pkg install libxslt
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb [Might take a while, please be patient]\033[0m"
-pip install imdbpy
+pip install IMDbPY
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
 pip install prompt-toolkit
@@ -86,9 +86,7 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing phonenumbers\033[0m"
 pip install phonenumbers
 echo
-echo -e "\033[1;91m[*]\033[1;97m Installing update check\033[0m"
-pip install update_check
-echo
+
 echo -e "\033[1;91m[*]\033[1;97m Installing colorama\033[0m"
 pip install colorama
 echo
@@ -154,7 +152,7 @@ echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m"
 sudo pip install google
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
-pip install imdbpy
+pip install IMDbPY
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
 pip install prompt-toolkit
@@ -168,9 +166,7 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing BeautifulSoup4\033[0m"
 pip install bs4
 echo
-echo -e "\033[1;91m[*]\033[1;97m Installing update check\033[0m"
-pip install update_check
-echo
+
 echo -e "\033[1;91m[*]\033[1;97m Installing Find github\033[0m"
 pip install find-github-email
 echo
