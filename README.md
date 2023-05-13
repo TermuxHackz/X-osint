@@ -70,7 +70,7 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 
 > bash setup.sh
 
-<b>And your all done!!!..and updated </b>
+And your all done!!!..and updated 
 
 <h3><u>How to Update for Linux</u></h3>
 <b>ALSO TYPE THE DOLLAR SIGN </b>
@@ -94,7 +94,7 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 
 > bash setup.sh
 
-<b>And your all done!!!..and updated </b>
+And your all done!!!..and updated 
 
 
 # Demo Installation 
@@ -240,7 +240,17 @@ Some of the modules here and APIs used for the creation of X-osint, got the idea
 - [2] C3n7ral051nt4g3ncy
 - [3] SpiderAnonGreyHat
 
-
+# Faqs
+## If your getting the error below which says 
+ 1) sudo xosint
+Traceback (most recent call last):
+File "/usr/local/bin/xosint", line 11, in
+from googlesearch import search
+ModuleNotFoundError: No module named 'googlesearch'
+  
+  
+<u>Solution: </u> Kindly make sure you ran the `bash setup.sh` file and make sure you don't interrupt the setup process and after you run that, and doesnt still work type `pip install google` and re run xosint.
+  if your still having issue with it run `pip install googlesearch-python` and run xosint. That should solve your problem with xosint. Thank you and share to friends.
 
 
 
