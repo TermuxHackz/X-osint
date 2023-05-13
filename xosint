@@ -36,8 +36,6 @@ import phonenumbers
 from phonenumbers import geocoder
 import opencage
 import folium
-import update_check
-from update_check import isUpToDate, update
 from bs4 import BeautifulSoup as bs
 #29 modules
 
