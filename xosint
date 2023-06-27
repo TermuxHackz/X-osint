@@ -187,7 +187,13 @@ def traceip():
 ###email address information gathering
 def email_info():
 	mailid = input("\033[1;91m Enter email address: \033[1;94m")
-	eml = requests.get("https://ipqualityscore.com/api/json/email/pPiATkSdtLn3xgKW7a7HikZeZ4HMNa2R/" + mailid )
+	if not re.match(r"[^@]+@[^@]+\.[^@]+", mailid):
+		print("Please input a valid Email Address!")
+		return
+	eml = requests.get("https://ipqualityscore.com/api/json/email/pPiATkSdtLn3xgKW7a7HikZeZ4HMNa2R/" + mailid)
+	if str(eml.json()['success']) == "False":
+		print(eml.json()['message'])
+		return
 	print()
 	sleep(1)
 	print()
