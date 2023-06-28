@@ -19,7 +19,6 @@ import socket
 import requests
 import ipaddress
 import readline
-import imdb
 import colorama
 from colorama import *
 from time import sleep
@@ -99,7 +98,7 @@ main_menu = ("""
         \033[1;91m[\033[1;33;40m13\033[0m\033[1;91m]\033[1;97m Subdomain Enumeration
         \033[1;91m[\033[1;33;40m14\033[0m\033[1;91m]\033[1;97m Google Dork Hacking
         \033[1;91m[\033[1;33;40m15\033[0m\033[1;91m]\033[1;97m SMTP Analysis
-        \033[1;91m[\033[1;33;40m16\033[0m\033[1;91m]\033[1;97m Movie Database OSINT
+        \033[1;91m[\033[1;33;40mNULL\033[0m\033[1;91m]\033[1;97m Movie Database OSINT
         \033[1;91m[\033[1;33;40m17\033[0m\033[1;91m]\033[1;97m Dark Web Search
         \033[1;91m[\033[1;33;40m18\033[0m\033[1;91m]\033[1;97m Next
         \033[1;91m[\033[1;33;40m19\033[0m\033[1;91m]\033[1;97m Report bugs
@@ -822,74 +821,6 @@ elif option == "15":
 	spoof(target,port)
 	userenum(target,port)
 
-### Movie Database OSINT
-elif option == "16":
-	os.system("clear")
-	print(banner)
-	print("\t\t\033[1;97mMOVIE DATABASE OSINT\033[0m")
-	movie_menu = ("""
-	\033[1;91m[??] Choose an option:
-	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m Movie Name
-	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Keyword
-	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Company Name of Movie
-	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Actor Name
-	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Check if Actor was starred in a Movie
-	\033[1;91m[\033[1;33;40mq\033[0m\033[1;91m] \033[1;97m Quit
-	""")
-	print(movie_menu)
-	select = input("\033[1;91m[~]\033[0m\033[1;97m Select an option: \033[0m")
-	if select == "1":
-		ia = imdb.IMDb()
-		movie_name = input("\033[1;91m[+]\033[0m\033[1;94mEnter name of movie: \033[0m")
-		search = ia.search_movie(movie_name)
-		#print result
-		for i in search:
-			print(i)
-	elif select == "2":
-		ia = imdb.IMDb()
-		keyword = input('\033[1;91m[+]\033[0m\033[1;94mEnter movie keyword eg (Heaven): \033[0m')
-		#search for the keyword
-		search = ia.get_keyword(keyword)
-		#print the result
-		print(len(search))
-		print(search[0])
-	elif select == "3":
-		ia = imdb.IMDb()
-		company_name = input('\033[1;91m[+]\033[0m\033[1;94mSearch Company name eg: (Marvel Studios): \033[0m')
-		search = ia.search_company(company_name)
-		for i in search:
-			print(i)
-	elif select == "4":
-		ia = imdb.IMDb()
-		name = input('\033[1;91m[+]\033[0m\033[1;94mEnter actor name: \033[0m')
-		search = ia.search_person(name)
-		
-		for i in search:
-			print(i)
-	elif select == "5":
-		ia = imdb.IMDb()
-		code = input('\033[1;91m[+]\033[0m\033[1;94mEnter Movie ID (eg: 4434004 or 1187043: \033[0m')
-		movie = ia.get_movie(code)
-		code2 = input('\033[1;91m[+]\033[0m\033[1;94mEnter Actor ID (eg: 1372788): \033[0m')
-		person = ia.get_person(code2)
-		print(movie)
-		print("\033[1;91m[*]\033[0m\033[1;94mGetting results if actor starred in a movie \033[0m")
-		time.sleep(2)
-		print("\033[1;97m====================================\033[0m")
-		if person in movie:
-			print("\033[1;94mYes, Actor Starred in this movie\033[0m")
-			time.sleep(0.1)
-			sys.exit(1)
-		else:
-			print("\033[1;91mNo, Actor Didnt Star in this movie\033[0m")
-			time.sleep(0.1)
-			sys.exit(1)
-	elif select == "q":
-		exit()
-
-	else:
-		print("\033[1;91m[!] Not part of the options..try again \033[0m")
-		exit
 #### DEEP WEB SCRAPING OSINT
 
 elif option == "17":
