@@ -252,6 +252,14 @@ ModuleNotFoundError: No module named 'googlesearch'
 <u>Solution: </u> Kindly make sure you ran the `bash setup.sh` file and make sure you don't interrupt the setup process and after you run that, and doesnt still work type `pip install google` and re run xosint.
   if your still having issue with it run `pip install googlesearch-python` and run xosint. That should solve your problem with xosint. Thank you and share to friends.
 
+ 2) sudo xosint
+Traceback (most recent call last):
+File "/usr/local/bin/xosint", line 37, in module
+import folium
+ModuleNotFoundError: No module named 'folium'
+
+
+<u>Solution: </u> Type <code>pkg install python-numpy</code> and then <code> pip install folium</code>
 
 
 
