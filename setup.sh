@@ -179,6 +179,7 @@ echo -e "\033[1;91m[*]\033[1;97m Installing Find github\033[0m"
 pip install find-github-email
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing folium\033[0m"
+pkg install python-numpy
 pip install folium
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing opencage\033[0m"
