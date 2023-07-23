@@ -84,8 +84,8 @@ for col in banner:
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
 	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m IP Address Information
-	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information
-	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Phone Number Information
+	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information \033[1;91m[\033[1;92mNOT WORKING FOR NOW!\033[0m\033[1;91m]
+	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Phone Number Information  \033[1;91m[\033[1;92mNOT WORKING FOR NOW!\033[0m\033[1;91m]
 	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Host Search
 	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Ports
 	\033[1;91m[\033[1;33;40m6\033[0m\033[1;91m] \033[1;97m Exploit CVE
