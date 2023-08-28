@@ -116,6 +116,24 @@ chmod +x *
 bash setup.sh
 ```
 
+# Installation using python virtual environment if normal installation doesnt work
+<p style="color: green"> The normal installation of Xosint might likely have some issues running or installing due to some missing python packages, use this method only if the normal installation and usage doesnt work!!
+</p>
+
+```
+cd $HOME
+git clone https://github.com/TermuxHackz/X-osint
+cd X-osint
+chmod +x *.sh
+python3 -m venv X-osint_venv
+source X-osint_venv/bin/activate ./setup.sh
+pip install google
+python xosint
+
+```
+<p> <b>NOTE: Make sure you quit the python virtual environment after you have finished using Xosint by typing</b>:
+<code>deactivate</code>
+And then reactivate it anytime you want to use X-osint.</p>
 
 # How to update Automatically (if your using version 2.1 of X-Osint and above)
 
