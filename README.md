@@ -127,7 +127,7 @@ git clone https://github.com/TermuxHackz/X-osint
 cd X-osint
 chmod +x *.sh
 python3 -m venv X-osint_venv
-source X-osint_venv/bin/activate ./setup.sh
+source X-osint_venv/bin/activate./setup.sh
 pip install google
 python xosint
 
