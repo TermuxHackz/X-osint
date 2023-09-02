@@ -1,3 +1,4 @@
+#commit.md
 # X-osint
 This is an osint tool which gathers useful and yet credible valid information about a phone number, user's email address and ip address and more to come in future updates 
 <img src="images/x-osint_banner_white_texts.png" float="center">
@@ -126,7 +127,7 @@ git clone https://github.com/TermuxHackz/X-osint
 cd X-osint
 chmod +x *.sh
 python3 -m venv X-osint_venv
-source X-osint_venv/bin/activate ./setup.sh
+source X-osint_venv/bin/activate./setup.sh
 pip install google
 python xosint
 
