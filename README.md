@@ -1,5 +1,10 @@
 # X-osint
-This is an osint tool which gathers useful and yet credible valid information about a phone number, user's email address and ip address and more to come in future updates 
+This is an osint tool which gathers useful and yet credible valid information about a phone number, user's email address and ip address and more to come in future updates
+
+# NOTE
+<b>A new stable version is soon to be released in the coming weeks. The aim of this update is to get rid of bugs and add some new improvements to the program. Have any features you might want to add or possibly collaborate with Feel feel to send an email to me </b> 
+<a href="mailto:AnonyminHack5@protonmail.com">here</a>
+
 <img src="images/x-osint_banner_white_texts.png" float="center">
 <center>
 <h2><img src="https://img.shields.io/badge/Author-AnonyminHack5-blueviolet"/>
