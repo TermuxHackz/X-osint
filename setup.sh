@@ -133,70 +133,62 @@ sudo apt install tor -y
 echo 
 echo -e "\033[1;91m[*]\033[1;97m Installing Lolcat\033[0m"
 echo
-pip install lolcat
+pip install lolcat --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing Pillow\033[0m"
 echo
-pip install pillow==2.2.1
+pip install pillow==2.2.1 --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing resolver\033[0m"
 echo
-pip install resolver
+pip install resolver --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing piexif\033[0m"
-pip install piexif
+pip install piexif --break-system-packages
 sleep 1
 echo
-echo -e "\033[1;91m[*]\033[1;97m Removing old packages\033[0m" 
-sudo python3 -m pip uninstall googlesearch-python -y
-sudo python3 -m pip uninstall google-search -y
-sudo python3 -m pip uninstall google -y
-echo
 echo -e "\033[1;91m[*]\033[1;97m Installing google\033[0m" 
-sudo pip install google
+pip install google --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing IMDb\033[0m" 
-pip install IMDbPY
-pip install imdbpy
+pip install IMDbPY --break-system-packages
+pip install imdbpy --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing Cinemagoer \033[0m"
-pip install cinemagoer
+pip install cinemagoer --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing prompt-toolkit\033[0m"
-pip install prompt-toolkit
+pip install prompt-toolkit --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing phonenumbers\033[0m"
-pip install phonenumbers
+pip install phonenumbers --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing colorama\033[0m"
-pip install colorama
+pip install colorama --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing BeautifulSoup4\033[0m"
-pip install bs4
+pip install bs4 --break-system-packages
 echo
 
 echo -e "\033[1;91m[*]\033[1;97m Installing Find github\033[0m"
-pip install find-github-email
+pip install find-github-email --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing folium\033[0m"
-pkg install python-numpy
-pip install folium
+apt install python3-numpy -y
+pip install folium --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing opencage\033[0m"
-pip install opencage
+pip install opencage --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing vininfo\033[0m"
-pip install vininfo
+pip install vininfo --break-system-packages
 echo
 echo -e "\033[1;91m[*]\033[1;97m Installing tkinter\033[0m"
-pip install tk-tools
+pip install tk-tools --break-system-packages
 echo
 printf "\e[1;94mSetting up environment for Linux .. \e[0m\n"				
 sleep 1
 echo
-sudo cp -r xosint /usr/local/bin
-cd /usr/local/bin && sudo chmod u+x xosint
-cd $HOME && sudo rm -rf X-osint
  printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Linux Terminal To use X-osint\e[0m\n"
  echo
  echo
