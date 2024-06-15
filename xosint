@@ -947,7 +947,7 @@ root = tk.Tk()
 root.withdraw() 
 
 ##Fetchupdate
-update_script() ####----->ENABLE THIS 
+##update_script() ####----->ENABLE THIS 
 
 show_support_popup()
 print(banner)
