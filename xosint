@@ -1,15 +1,6 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
-
-#XOSINT IS AN AUTOMATED OPEN SOURCE INTELLIGENT TOOL
-#CREATED 2023 BY ANONYMINHACK5
-#CREDITS TO SPIDER ANONGREYHAT, D3CRYPTOR, AND TERMUXHACKZ SOCIETY TEAM MEMBERS
-#Credits to pixelbub  
- #Importing modules and libraries
-
-
-from googlesearch import search
-
+from googlesearch import search # type: ignore
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException
 from email.mime.multipart import MIMEMultipart
 import re
@@ -31,12 +22,476 @@ from prompt_toolkit import print_formatted_text, HTML
 from pathlib import Path
 import platform
 from datetime import datetime
-import phonenumbers
-from phonenumbers import geocoder
+import phonenumbers # type: ignore
+from phonenumbers import geocoder # type: ignore
 import opencage
-import folium
 from bs4 import BeautifulSoup as bs
-#29 modules
+import tkinter as tk
+from tkinter import messagebox
+import webbrowser
+import stripe # type: ignore
+import tkinter as tk
+from tkinter import filedialog, simpledialog, messagebox
+from PIL import Image, ImageTk
+import base64
+from googleapiclient.discovery import build # type: ignore
+import requests
+from bs4 import BeautifulSoup
+import webbrowser
+from datetime import datetime, timedelta
+from flask import Flask, request, render_template_string
+import requests
+from cryptography.fernet import Fernet # type: ignore
+import subprocess
+import shutil
+
+
+##Code Analysis
+def run_command(command):
+    """Run a command in the shell and return its output."""
+    result = subprocess.run(command, shell=True, capture_output=True, text=True)
+    return result.stdout.strip(), result.stderr.strip()
+
+def analyze_python_file(file_path):
+    """Analyze a Python file for errors using pylint and flake8."""
+    print(f"\033[1;93m[+]\033[1;97m Analyzing Python file: {file_path}")
+    print("")
+    pylint_command = f"pylint {file_path}"
+    flake8_command = f"flake8 {file_path}"
+    
+    pylint_output, pylint_errors = run_command(pylint_command)
+    flake8_output, flake8_errors = run_command(flake8_command)
+    
+    if pylint_errors:
+        print(f"\033[1;91m[!]\033[1;97m Pylint errors:\n{pylint_errors}")
+        print("")
+    else:
+        print(f"\033[1;91m[+]\033[1;97m  Pylint output:\n{pylint_output}")
+    
+    if flake8_errors:
+        print(f"\033[1;91m[+]\033[1;97m  Flake8 errors:\n{flake8_errors}")
+    else:
+        print(f"\033[1;91m[+]\033[1;97m  Flake8 output:\n{flake8_output}")
+
+def analyze_javascript_file(file_path):
+    """Analyze a JavaScript file for errors using eslint."""
+    print(f"\033[1;91m[+]\033[1;97m Analyzing JavaScript file: {file_path}")
+    eslint_command = f"eslint {file_path}"
+    
+    eslint_output, eslint_errors = run_command(eslint_command)
+    
+    if eslint_errors:
+        print(f"\033[1;91m[+]\033[1;97m ESLint errors:\n{eslint_errors}")
+    else:
+        print(f"\033[1;91m[+]\033[1;97m ESLint output:\n{eslint_output}")
+
+
+##Check for updates from GIthub Repo
+##Fetchupdates
+def get_latest_commit(repo_owner, repo_name):
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/commits/master"
+    response = requests.get(url)
+    response.raise_for_status()
+    return response.json()['sha']
+
+def get_local_commit():
+    result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
+    return result.stdout.strip()
+
+def update_repo():
+    subprocess.run(['git', 'fetch', 'origin'], check=True)
+    subprocess.run(['git', 'reset', '--hard', 'origin/master'], check=True)
+
+def copy_to_bin(script_name):
+    bin_path = '/usr/local/bin'
+    script_path = os.path.join(os.getcwd(), script_name)
+    
+    target_path = os.path.join(bin_path, script_name)
+    if os.path.exists(script_path):
+        shutil.copy(script_path, target_path)
+      # Ensure the script is executable
+        os.chmod(target_path, 0o755)
+    else:
+        print(f"\033[1;91m[!]\033[1;97m Script {script_name} not found in the current directory.\033[0m")
+
+    
+def restart_script():
+    python = sys.executable
+    os.execl(python, python, *sys.argv)
+
+def check_for_updates(repo_owner, repo_name, script_name):
+    try:
+        latest_commit = get_latest_commit(repo_owner, repo_name)
+        local_commit = get_local_commit()
+
+        if latest_commit != local_commit:
+            print("Update available. Updating...")
+            update_repo()
+            copy_to_bin(script_name)
+            restart_script()
+        else:
+            print("\033[1;91m[+]\033[1;97m Already up-to-date.")
+    except requests.RequestException as e:
+        print(f"\033[1;91m[!]\033[1;97m Failed to fetch latest commit: {e}")
+    except subprocess.CalledProcessError as e:
+        print(f"\033[1;91m[!]\033[1;97m Failed to update repo: {e}")
+
+
+def update_script():
+    repo_owner = "TermuxHackz"
+    repo_name = "X-Osint"
+    script_name = "xosint"
+
+    # Check for updates
+    check_for_updates(repo_owner, repo_name, script_name)
+
+    # Your existing script logic here
+    print("\033[1;91m[+]\033[1;97m Running main script...")
+    time.sleep(0.5)
+
+# Define the ImageSearchApp function
+API_KEY_FILE = "api_keys.txt"
+
+def save_api_keys(api_key, search_engine_id):
+    with open(API_KEY_FILE, "w") as f:
+        f.write(f"{api_key}\n{search_engine_id}")
+
+def load_api_keys():
+    if os.path.exists(API_KEY_FILE):
+        with open(API_KEY_FILE, "r") as f:
+            keys = f.read().splitlines()
+            if len(keys) == 2:
+                return keys[0], keys[1]
+    return None, None
+
+def image_hunt():
+    root = tk.Tk()
+    root.title("Reverse Image Search")
+
+    # Add title label
+    title_label = tk.Label(root, text="Reverse Image Search", font=("Arial", 18, "bold"))
+    title_label.pack(pady=10)
+
+    # Ask user if they want to watch a demo
+    response = messagebox.askquestion("Demo", "Kindly watch a video on how to get your API keys?")
+    if response == 'yes':
+        # Open YouTube video in web browser
+        webbrowser.open("https://youtu.be/g2WU0aFExMM")
+
+    # Add upload button
+    upload_button = tk.Button(root, text="Upload Image", command=lambda: upload_image(root), font=("Arial", 12, "bold"))
+    upload_button.pack(pady=20)
+
+    # Add image label
+    global image_label
+    image_label = tk.Label(root)
+    image_label.pack(pady=10)
+
+    # Add result label
+    global result_label
+    result_label = tk.Label(root, text="")
+    result_label.pack(pady=10)
+
+    root.protocol("WM_DELETE_WINDOW", lambda: on_closing(root))
+    root.mainloop()
+
+def upload_image(root):
+    api_key, search_engine_id = load_api_keys()
+
+    if not api_key or not search_engine_id:
+        api_key = simpledialog.askstring("API Key", "Enter your Google Custom Search API Key:")
+        search_engine_id = simpledialog.askstring("Search Engine ID", "Enter your Google Custom Search Engine ID:")
+
+        if api_key and search_engine_id:
+            save_api_keys(api_key, search_engine_id)
+        else:
+            messagebox.showerror("Error", "API key and Search Engine ID are required.")
+            return
+
+    file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.png")])
+    if file_path:
+        try:
+            image = Image.open(file_path)
+            image = image.resize((400, 400), Image.LANCZOS)
+            photo = ImageTk.PhotoImage(image)
+
+            image_label.config(image=photo)
+            image_label.image = photo  # Keep a reference to avoid garbage collection
+
+            google_results = reverse_image_search_google(api_key, search_engine_id, file_path)
+            show_results(google_results)
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
+
+def reverse_image_search_google(api_key, search_engine_id, image_path):
+    service = build("customsearch", "v1", developerKey=api_key)
+    with open(image_path, "rb") as image_file:
+        image_content = base64.b64encode(image_file.read()).decode('utf-8')
+
+    search_response = service.cse().list(
+        q='',
+        cx=search_engine_id,
+        searchType='image',
+        num=10
+    ).execute()
+
+    results = []
+    if 'items' in search_response:
+        for item in search_response['items']:
+            results.append(item['link'])
+
+    return results
+
+def show_results(google_results):
+    if google_results:
+        google_text = "Google Search Results:\n" + "\n".join(google_results[:5])
+    else:
+        google_text = "No Google search results found."
+
+    result_label.config(text=google_text)
+
+def on_closing(root):
+    root.destroy()
+    exit()
+
+
+###Add News OSint script here
+def get_news_articles(query, api_key):
+    url = f'https://newsapi.org/v2/everything?q={query}&apiKey={api_key}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()['articles']
+    else:
+        print(f"Error: {response.status_code}")
+        return []
+
+def newsOsint():
+    api_key = 'a701b803d0ac4fc89aaded6143de644d'
+    
+    # Prompt the user to input a name
+    name = input("\033[1;91m[+]\033[1;97mEnter the name you want to search for: \033[0m")
+    
+    # Fetch news articles related to the input name
+    articles = get_news_articles(name, api_key)
+    
+    # Display the articles
+    if articles:
+        print(f"\nNews articles about {name}:\n")
+        for i, article in enumerate(articles, start=1):
+            print(f"{i}. {article['title']}")
+            print(f"   Source: {article['source']['name']}")
+            print("")
+            print(f"   Link: {article['url']}\n")
+    else:
+        print("No articles found.")
+
+
+###Phone number Location
+def get_api_keys():
+    if os.path.exists('numandcage_keys.txt'):
+        with open('numandcage_keys.txt', 'r') as file:
+            keys = file.readlines()
+            if len(keys) == 4:
+                ipqualityscore_api_key = keys[0].strip()
+                opencage_api_key = keys[1].strip()
+                vonage_api_key = keys[2].strip()
+                vonage_api_secret = keys[3].strip()
+            else:
+                ipqualityscore_api_key, opencage_api_key, vonage_api_key, vonage_api_secret = get_and_save_api_keys()
+    else:
+        ipqualityscore_api_key, opencage_api_key, vonage_api_key, vonage_api_secret = get_and_save_api_keys()
+    
+    return ipqualityscore_api_key, opencage_api_key, vonage_api_key, vonage_api_secret
+
+def get_and_save_api_keys():
+    while True:
+        ipqualityscore_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your IPQualityScore API key: \033[0m").strip()
+        opencage_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your OpenCage API key: \033[0m").strip()
+        vonage_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API key: \033[0m").strip()
+        vonage_api_secret = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API secret: \033[0m").strip()
+        if ipqualityscore_api_key and opencage_api_key and vonage_api_key and vonage_api_secret:
+            with open('numandcage_keys.txt', 'w') as file:
+                file.write(f"{ipqualityscore_api_key}\n{opencage_api_key}\n{vonage_api_key}\n{vonage_api_secret}")
+            return ipqualityscore_api_key, opencage_api_key, vonage_api_key, vonage_api_secret
+        else:
+            print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;97m Please enter valid API keys. \033[0m")
+
+def get_phone_info(phone_number, ipqualityscore_api_key, vonage_api_key, vonage_api_secret):
+    ipqualityscore_url = f"https://ipqualityscore.com/api/json/phone/{ipqualityscore_api_key}/{phone_number}"
+    response = requests.get(ipqualityscore_url)
+    ipqualityscore_info = response.json()
+
+    vonage_url = f"https://api.nexmo.com/ni/advanced/async/json"
+    vonage_params = {
+        'api_key': vonage_api_key,
+        'api_secret': vonage_api_secret,
+        'number': phone_number
+    }
+    response = requests.get(vonage_url, params=vonage_params)
+    vonage_info = response.json()
+
+    phone_info = {**ipqualityscore_info, **vonage_info}  # Merge dictionaries
+    return phone_info
+
+
+
+def get_location_info(country_code, location, opencage_api_key):
+    opencage_url = f"https://api.opencagedata.com/geocode/v1/json?q={location}&countrycode={country_code}&key={opencage_api_key}"
+    response = requests.get(opencage_url)
+    return response.json()
+
+def is_valid_phone_number(phone_number):
+    # Basic validation to check if phone number includes a country code and is numeric
+    if phone_number.startswith('+') and phone_number[1:].isdigit():
+        return True
+    return False
+
+def open_in_maps(latitude, longitude):
+    choice = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Would you like to open the location in Google Maps or Apple Maps? (Enter 'google' or 'apple'): \033[0m").strip().lower()
+    if choice == 'google':
+        webbrowser.open(f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}")
+    elif choice == 'apple':
+        webbrowser.open(f"https://maps.apple.com/?q={latitude},{longitude}")
+    else:
+        print("Invalid choice. Skipping map opening.")
+
+def phone_inf():
+    ipqualityscore_api_key, opencage_api_key, vonage_api_key, vonage_api_secret = get_api_keys()
+
+    while True:
+        print("")
+        phone_number = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter the phone number (with country code, e.g., +1234567890): \033[0m").strip()
+        if is_valid_phone_number(phone_number):
+            break
+        else:
+            print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;97mPlease enter a valid phone number with country code.")
+
+    phone_info = get_phone_info(phone_number, ipqualityscore_api_key, vonage_api_key, vonage_api_secret)
+
+    if phone_info.get('valid', False):
+        print("")
+        print(f"\033[1;91m➤\033[1;97mPhone Number      : {phone_info.get('phone_number', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCountry           : {phone_info.get('country', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mLocation          : {phone_info.get('location', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCarrier           : {phone_info.get('carrier', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mLine Type         : {phone_info.get('line_type', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mRisk Score        : {phone_info.get('risk_score', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mSpammer           : {phone_info.get('spammer', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mActive            : {phone_info.get('active', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mRecent Abuse      : {phone_info.get('recent_abuse', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mFraud Score       : {phone_info.get('fraud_score', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mPorted            : {phone_info.get('ported', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCaller Type       : {phone_info.get('caller_type', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCaller Name       : {phone_info.get('caller_name', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mRoaming           : {phone_info.get('roaming', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mReachable         : {phone_info.get('reachable', 'N/A')}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mHandset Status    : {phone_info.get('handset_status', 'N/A')}")
+        print("")
+
+        if phone_info.get('country_code', False) and phone_info.get('location', False):
+            location_info = get_location_info(phone_info['country_code'], phone_info['location'], opencage_api_key)
+            if location_info['results']:
+                location = location_info['results'][0]['geometry']
+                latitude = location['lat']
+                longitude = location['lng']
+                print(f"Latitude: {latitude}, Longitude: {longitude}")
+                
+                # Ask the user if they want to open the location in maps
+                open_in_maps(latitude, longitude)
+            else:
+                print("Could not find location information.")
+    else:
+        print("Invalid phone number or failed to retrieve phone number information.")
+
+
+####Second Method for Phone Number
+def find_api_keys():
+    if os.path.exists('numandcage_keys.txt'):
+        with open('numandcage_keys.txt', 'r') as file:
+            keys = file.readlines()
+            if len(keys) == 2:
+                numverify_api_key = keys[0].strip()
+                opencage_api_key = keys[1].strip()
+            else:
+                numverify_api_key, opencage_api_key = find_and_save_keys()
+    else:
+        numverify_api_key, opencage_api_key = find_and_save_keys()
+    
+    return numverify_api_key, opencage_api_key
+
+def find_and_save_keys():
+    while True:
+        numverify_api_key = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your Numverify API key: \033[0m").strip()
+        opencage_api_key = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your OpenCage API key: \033[0m").strip()
+        if numverify_api_key and opencage_api_key:
+            with open('numandcage_keys.txt', 'w') as file:
+                file.write(f"{numverify_api_key}\n{opencage_api_key}")
+            return numverify_api_key, opencage_api_key
+        else:
+            print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mPlease enter valid API keys.")
+
+def find_phone_info(phone_number, numverify_api_key):
+    numverify_url = f"http://apilayer.net/api/validate?access_key={numverify_api_key}&number={phone_number}"
+    response = requests.get(numverify_url)
+    return response.json()
+
+def find_location_info(country_code, location, opencage_api_key):
+    opencage_url = f"https://api.opencagedata.com/geocode/v1/json?q={location}&countrycode={country_code}&key={opencage_api_key}"
+    response = requests.get(opencage_url)
+    return response.json()
+
+def phone_inf2():
+    numverify_api_key, opencage_api_key = find_api_keys()
+    
+    phone_number = input("\033[1;97m[+]\033[0m\033[1;91m  Enter the phone number: \033[0m")
+    print("")
+    phone_info = find_phone_info(phone_number, numverify_api_key)
+
+    if phone_info['valid']:
+        print(f"\033[1;91m➤\033[1;97mPhone Number    : {phone_info['international_format']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCountry         : {phone_info['country_name']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97m Valid          : {phone_info['valid']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mLocation        : {phone_info['location']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCarrier         : {phone_info['carrier']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mLine Type       : {phone_info['line_type']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCountry Prefix  : {phone_info['country_prefix']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mLocal format    : {phone_info['local_format']}")
+        print("")
+        print(f"\033[1;91m➤\033[1;97mCountry Code    : {phone_info['country_code']}")
+        print("")
+        
+        location_info = find_location_info(phone_info['country_code'], phone_info['location'], opencage_api_key)
+        if location_info['results']:
+            location = location_info['results'][0]['geometry']
+            print(f"Latitude: {location['lat']}, Longitude: {location['lng']}")
+        else:
+            print("Could not find location information.")
+    else:
+        print("Invalid phone number.")
+
+
 
 RED = "\033[91m"
 GREEN = "\033[92m"
@@ -58,7 +513,37 @@ class colors:
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 
-banner = ("""
+
+tookie_banner = ("""\033[32m
+                 ,,,,,                                    
+                 ╓▄▓▓▓███████████▓▓▓▄╥                            
+             ▄▓███▓▀╨╙└         └╙╙▀▓███▌▄                        
+          ▄▓██▓╨─       ,▄▄▄▌▓▓▌▌▄▄╥,  ╙▀██▓▄                     
+        Φ██▓╨  ╔   ╓▄▓▓▀▀╙├,,,,,,,├╙▀█▓▄  ╙▓██▌                   
+      ▄██▓└     ╓▓██▄,=░░░░░░░░░░░░░░»└▓█─  └▓██▄                 
+    ,▓██╨  æ   ╓▓█▀┤░░░▒▒▄╣╣▓╣╣▒▒▒▒▒░░▄▓██▄   ╙██▓                
+   ╒███      ,▓█╬░░░░░░╫▓██▀▀▀██▓╬╠╠╫██└ ╙██⌐  ^███               
+   ███  ╓   ╔█▓╟╣╬░░░▒╫▓█╜]▄╫█▄╫█▓╬▓█▀     ▓█─   ███              
+  ▓██      ▐████╬░░░╚╙╠╫█Q'╝█▓┌╫█▓██▄░      █▌   ╚██▌             
+ ]██▌  φ─  ▀▓█▓▒▒▄╠▒»,╔▒╬██▓▌▓██▓█▌╙▓▓▌▄▄░  █▌    ███             
+ ╫██Γ       ██╠▓▓▓▒▒▒▒   ▒▒╬╬╩▒╫▓█▌   ╓▓██▒╫█⌐    ▓██             
+ ╫██µ      ╫█▓███▒▒▒▒▒▒▒▒▒▒╣╬▒▒╠▓██▓▓██▀ ███╙ ╙▀  ╫██             
+ ╟██▄  "   ▀███╬▓██▒▒▒▓▒▒▒▒╩▓▓▓▄╠▓████▌  ▀╙   ⁿ   ███             
+  ███  ~   .██╬▓█▓████▒▒▒▒▒▒▒╣▓█████████,    ªÆ  ]██▓             
+  ▓██▄  ,  ╫█████▓╬▓██▒▒▓▓▒▒▒▓▒╠╬▀▓▓▓████µ  ╓µ   ███              
+   ███▄ └` ▄███▓███████████▓▓█▓▒▒▒▓▌▒▒███┴      ▓██▀              
+    ███▄  ╟███████▓╬█▓╬╬╣████▓██▓▓████████µ   ,███▀               
+     ▀███┬▐███████████▓▓███████████▓█▓▓███   ▄███Γ                
+      └██████▓▓███████████████▓██▓▓███████▒▄███▀                  
+        └▓███████▓▓▓██▓▓████▓▓███████████████▀                    
+           ▀██████████████████████████████▀╙                      
+              ╙▀██████████████████████▀▀─                         
+                   ╙╙▀▀▓███████▀▀▀╙└                              
+                                
+             \033[0m""")
+
+
+banner = ("""\033[38;5;208m
 ▒██   ██▒ ▒█████    ██████  ██▓ ███▄    █ ▄▄▄█████▓
 ▒▒ █ █ ▒░▒██▒  ██▒▒██    ▒ ▓██▒ ██ ▀█   █ ▓  ██▒ ▓▒
 ░░  █   ░▒██░  ██▒░ ▓██▄   ▒██▒▓██  ▀█ ██▒▒ ▓██░ ▒░
@@ -68,10 +553,10 @@ banner = ("""
 ░░   ░▒ ░  ░ ▒ ▒░ ░ ░▒  ░ ░ ▒ ░░ ░░   ░ ▒░    ░    
  ░    ░  ░ ░ ░ ▒  ░  ░  ░   ▒ ░   ░   ░ ░   ░      
  ░    ░      ░ ░        ░   ░           ░          
-   An Open Source Intelligence Framework                          
+   \033[1;37mAn Open Source Intelligence Framework                          
         Created by: AnonyminHack5
-        Team: TermuxHackz Society
-        	Version: \033[1;92m2.1\033[0m
+        Team: TermuxHackz Society\033[0m
+        	Version: \033[1;92m2.2\033[0m
 	   \033[1;97mPlatform: \033[0m\033[1;96m""" + platform.system())
 
 
@@ -84,8 +569,8 @@ for col in banner:
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
 	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m IP Address Information
-	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information \033[1;91m[\033[1;92mNOT WORKING FOR NOW!\033[0m\033[1;91m]
-	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Phone Number Information  \033[1;91m[\033[1;92mNOT WORKING FOR NOW!\033[0m\033[1;91m]
+	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information
+	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Get Location from Image  \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
 	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Host Search
 	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Ports
 	\033[1;91m[\033[1;33;40m6\033[0m\033[1;91m] \033[1;97m Exploit CVE
@@ -98,9 +583,9 @@ main_menu = ("""
         \033[1;91m[\033[1;33;40m13\033[0m\033[1;91m]\033[1;97m Subdomain Enumeration
         \033[1;91m[\033[1;33;40m14\033[0m\033[1;91m]\033[1;97m Google Dork Hacking
         \033[1;91m[\033[1;33;40m15\033[0m\033[1;91m]\033[1;97m SMTP Analysis
-        \033[1;91m[\033[1;33;40mNULL\033[0m\033[1;91m]\033[1;97m Movie Database OSINT
+        \033[1;91m[\033[1;33;40m16\033[0m\033[1;91m]\033[1;97m Check Global InfoStealer Attack \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
         \033[1;91m[\033[1;33;40m17\033[0m\033[1;91m]\033[1;97m Dark Web Search
-        \033[1;91m[\033[1;33;40m18\033[0m\033[1;91m]\033[1;97m Next
+        \033[1;91m[\033[1;33;40m18\033[0m\033[1;91m]\033[38;5;208m Next Tools >
         \033[1;91m[\033[1;33;40m19\033[0m\033[1;91m]\033[1;97m Report bugs
 	\033[1;91m[\033[1;33;40m99\033[0m\033[1;91m]\033[1;97m Update X-osint
 	\033[1;91m[\033[1;33;40m100\033[0m\033[1;91m]\033[1;97m About
@@ -183,13 +668,66 @@ def traceip():
 		print("[*] Aborting.....")
 		print()
 
+##Payment Support 
+stripe.api_key = "sk_test_51PPJGRHFUeNFgW9qtt7XLXIZZxuFRfkdoXXOqDY9gHGWlzo4ODBuqnnOTHLKDDop5OJMhC5YdLaqO3McPnrPbfd800mcey87nX"
+
+def create_checkout_session():
+    try:
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'usd',  # Fixed currency
+                    'product_data': {
+                        'name': 'Support Script',
+                    },
+                    'unit_amount': 500,  # Amount in cents ($5.00)
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url='http://127.0.0.1:5000/success',
+            cancel_url='http://127.0.0.1:5000/cancel',
+        )
+        return session.url
+    except stripe.error.StripeError as e:
+        print(e)
+        return None
+
+def open_browser():
+    session_url = create_checkout_session()
+    if session_url:
+        webbrowser.open(session_url)
+    root.quit()
+
+def close_popup():
+    popup_window.destroy()
+    root.quit()
+
+def show_support_popup():
+    global root, popup_window
+    root.withdraw()  # Hide the root window
+    popup_window = tk.Toplevel()
+    popup_window.title("Support Script")
+
+    label = tk.Label(popup_window, text="Would you like to pay to support this script?, \nThis is to ensure X-osint works well, and if it doesnt its because you didnt support the tool \n\n Payments are secured and encrypted through Stripe")
+    label.pack(pady=10)
+
+    yes_button = tk.Button(popup_window, text="Yes", command=open_browser)
+    yes_button.pack(side=tk.LEFT, padx=10)
+
+    no_button = tk.Button(popup_window, text="No", command=close_popup)
+    no_button.pack(side=tk.RIGHT, padx=10)
+
+    root.mainloop()
+
 ###email address information gathering
 def email_info():
-	mailid = input("\033[1;91m Enter email address: \033[1;94m")
+	mailid = input("\033[1;91mEnter email address: \033[1;94m")
 	if not re.match(r"[^@]+@[^@]+\.[^@]+", mailid):
 		print("Please input a valid Email Address!")
 		return
-	eml = requests.get("https://ipqualityscore.com/api/json/email/pPiATkSdtLn3xgKW7a7HikZeZ4HMNa2R/" + mailid)
+	eml = requests.get("https://ipqualityscore.com/api/json/email/lPnx5AhAUv4jgIFDXquYpe8CVBjmaTii/" + mailid)
 	if str(eml.json()['success']) == "False":
 		print(eml.json()['message'])
 		return
@@ -271,121 +809,49 @@ def email_info():
 	print()
  
  ### Phone number info
-def phone_info():
-	mobileno = input("\033[1;91m [+]\033[1;92m Enter phone number with country code: \033[1;97m")
-	try:
-		parse = phonenumbers.parse(mobileno)
-	except:
-		print('\033[1;91m[!]\033[1;97mPlease add "+" sign to the country code\033[0m\n')
-		time.sleep(1)
-		phone_info()
-	if phonenumbers.is_valid_number(parse) is False:
-		print(Fore.RED + "[!]" + Fore.WHITE + "You have just entered an invalid phone number!!dammit!!\n")
-		time.sleep(1)
-		phone_info()
-	from phonenumbers import geocoder
-	pepnumber = phonenumbers.parse(mobileno)
-	location = geocoder.description_for_number(pepnumber, 'en')
-	#print(location)
-	from opencage.geocoder import OpenCageGeocode
-	
-	if os.path.exists("./opencage_api.txt") and os.path.getsize("./opencage_api.txt") > 0:
-		with open('opencage_api.txt', 'r') as file:
-			opencage_api=file.readline().rstrip('\n')
+def get_decimal_from_dms(dms, ref):
+    degrees = dms[0][0] / dms[0][1]
+    minutes = dms[1][0] / dms[1][1] / 60.0
+    seconds = dms[2][0] / dms[2][1] / 3600.0
 
-	else:
-		file = open("opencage_api.txt", "w")
-		opencage_api = input("""\n[+] Please enter a valid Opencage API key (Get from opencagedata.com): """)
-		file.write(opencage_api)
-		print("[+] File written: ./opencage_api.txt")
-		file.close()
-	key = opencage_api ##I may change this and replace it with a tempporary API
-	#API_KEY
-	geocoder = OpenCageGeocode(key)
-	query = str(location)
-	results = geocoder.geocode(query)
-      
-	phe = requests.get("https://ipqualityscore.com/api/json/phone/pPiATkSdtLn3xgKW7a7HikZeZ4HMNa2R/" + mobileno )
-	sleep(1)
-	print()
-	time.sleep(3)
-	print("\033[1;97mIf you get an error it is likely due to the number of request going into the server so try again later\033[0m")
-	print()
-	print("\033[1;91m[~]\033[1;97m Phone Number Details are given down below")
-	print()
-	print("\033[1;91m➤\033[1;97m Target Number  : " + mobileno)
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Status Code    : " + str(phe.status_code))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Valid          : " + str(phe.json() ['valid']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m VOIP           : " + str(phe.json() ['VOIP']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Active         : " + str(phe.json() ['active']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Active Status  : " + str(phe.json() ['active_status']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Carrier        : " + str(phe.json() ['carrier']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m City           : " + str(phe.json() ['city']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Country        : " + str(phe.json() ['country']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Dialing Code   : " + str(phe.json() ['dialing_code']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Line Type      : " + str(phe.json() ['line_type']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Local Format   : " + str(phe.json() ['local_format']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m MCC            : " + str(phe.json() ['mcc']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Name           : " + str(phe.json() ['name']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Prepaid        : " + str(phe.json() ['prepaid']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m SMS Domain     : " + str(phe.json() ['sms_domain']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m SMS E-mail     : " + str(phe.json() ['sms_email']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Spammer        : " + str(phe.json() ['spammer']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Success        : " + str(phe.json() ['success']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m TimeZone       : " + str(phe.json() ['timezone']))
-	sleep(0.1)
-	print("\033[1;91m➤\033[1;97m Zip Code       : " + str(phe.json() ['zip_code']))
-	sleep(0.1)
-	print()
-	print("\033[1;91m➤\033[1;97m Success        : " + str(phe.json() ['success']))
-	sleep(0.1)
-	print()
-	print("\033[1;91m➤\033[1;97m VIP INFO \033[0m")
-	sleep(0.1)
-	#print(results) #printresult from geocoder
-	
-	lat = results[0]['geometry']['lat']
-	lng = results[0]['geometry']['lng']
-	
-	
-	print('\033[1;91m➤\033[1;97m Location: ', lat, lng)
-	myMap = folium.Map(location=[lat, lng], zoom_start=9)
-	folium.Marker([lat, lng], popup=location).add_to(myMap)
-	
-	##Save the html newly generated file
-	myMap.save("target_location.html")
- 
-	open_result = input("""\n Do you want to open result in your brower? [Y] or [N]: """)
- 
-	if open_result == "Y" or "y":
-		try:
-			os.system("xdg-open target_location.html")
-			time.sleep(1)
-			sys.exit(1)
-		except KeyboardInterrupt:
-			print('CTRL C Detected..Quitting')
-			exit()
-	elif open_result == "N" or "n":
-		sys.exit(1)
+    decimal = degrees + minutes + seconds
+    if ref == "S" or ref == "W":
+        decimal = -decimal
+    return decimal
+
+def extract_gps_info(image_path):
+    if not os.path.exists(image_path):
+        print(f"The file {image_path} does not exist.")
+        return None
+
+    img = Image.open(image_path)
+    exif_data = piexif.load(img.info['exif'])
+
+    gps_data = exif_data.get("GPS", None)
+    if not gps_data:
+        print("No GPS information found in the image...sorry, try another hehe")
+        return None
+
+    gps_latitude = gps_data.get(piexif.GPSIFD.GPSLatitude)
+    gps_latitude_ref = gps_data.get(piexif.GPSIFD.GPSLatitudeRef).decode()
+    gps_longitude = gps_data.get(piexif.GPSIFD.GPSLongitude)
+    gps_longitude_ref = gps_data.get(piexif.GPSIFD.GPSLongitudeRef).decode()
+
+    if not all([gps_latitude, gps_latitude_ref, gps_longitude, gps_longitude_ref]):
+        print("Incomplete GPS information found in the image.")
+        return None
+
+    lat = get_decimal_from_dms(gps_latitude, gps_latitude_ref)
+    lon = get_decimal_from_dms(gps_longitude, gps_longitude_ref)
+
+    return lat, lon
+
+def open_map(lat, lon):
+    map_url = f"https://www.google.com/maps?q={lat},{lon}"
+    webbrowser.open(map_url)
+    print(f"Opened map at {lat}, {lon}")
+
+
 
 #### Update script
 def update():
@@ -473,18 +939,34 @@ def update():
 		sleep(0.5)
 		exit
 		
-#### STart main script
+#### Start main script
 ### 4, 5, 6, 7
 os.system("clear")
+global root
+root = tk.Tk()
+root.withdraw() 
+
+##Fetchupdate
+update_script() ####----->ENABLE THIS 
+
+show_support_popup()
 print(banner)
 print(main_menu)
-option = input("\033[1;91mxosint>> \033[1;97m") 
+option = input("\033[38;5;208mxosint>> \033[1;97m") 
 if option == "1":
 	traceip()
 elif option == "2":
 	email_info()
 elif option == "3":
-	phone_info()
+    def main():
+        image_path = input("Enter the path to the image: ").strip()
+        location = extract_gps_info(image_path)
+        if location:
+            print("\033[1;91m[+]\033[0m\033[1;97mMaps Location wil be opened in 3secs.. \033[0m")
+            time.sleep(3)
+            open_map(*location)
+    main()
+	
 elif option == "4":
 	def shodan_host():
 		if os.path.exists("./api.txt") and os.path.getsize("./api.txt") > 0:
@@ -820,6 +1302,112 @@ elif option == "15":
 	port = input('\033[1;91m[+]\033[0m\033[1;97mEnter port or type "*" to use all ports: \033[0m')
 	spoof(target,port)
 	userenum(target,port)
+ 
+#### InfoStealer Attack
+elif option == "16":
+    W = '\033[0m'
+    C = '\033[36m'
+    R = '\033[31m'
+    G = '\033[32m'
+ 
+    os.system("clear")
+    print(banner)
+    ten_main_menu = ("""
+                     \033[1;91m[??] Choose an option:
+                     \033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m Check Email Data Breach
+                     \033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Check Domain Data Breach
+                     \033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Check Username Data Breach
+                     \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m Go back
+                     """) ##I would still add more here
+    print(ten_main_menu)
+    ten_input = input('\033[38;5;208mxosint>> \033[0m')
+    
+    if ten_input == "1":
+        email_answer = input("\033[1;91m[+]\033[1;97m Enter the email to check for Data Breach: \033[0m")
+        print("")
+        def search_by_email(email_answer):
+            api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-email"
+            url = f"{api_url}?email={email_answer}"
+            
+            
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                data = response.json()
+                return data
+            
+            except requests.exceptions.RequestException as e:
+                print(f"[!] An Error Occured: {e}")
+                return None
+            
+        result = search_by_email(email_answer) # type: ignore
+        if result:
+            print("\033[1;91m[+]\033[0m\033[1;97m Breached Data: \033[0m")
+            import json
+            print(json.dumps(result, indent=4))
+        else:
+            print("\033[1;91m[+]\033[0m\033[1;97m No Data found or an error occurred. \033[0m")
+    
+    elif ten_input == "2":
+        domain_answer = input("\033[1;91m[+]\033[1;97m Enter the Doamin to check (ending in .com): \033[0m")
+        print("")
+        def search_by_domain(domain_answer):
+            api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain"
+            url = f"{api_url}?domain={domain_answer}"
+            
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                data = response.json()
+                return data
+            except requests.exceptions.RequestException as e:
+                print(f"[!] An Error Occured: {e}")
+                return None
+        
+        result2 = search_by_domain(domain_answer)
+        if result2:
+            print("\033[1;91m[+]\033[0m\033[1;97m Breached Data: \033[0m")
+            import json
+            print(json.dumps(result2, indent=4))
+        else:
+            print("\033[1;91m[+]\033[0m\033[1;97m No Data found or an Error Occurred. \033[0m")
+            
+    
+    elif ten_input == "3":
+        username_answer = input("\033[1;91m[+]\033[1;97m Enter the Username to check: \033[0m")
+        print("")
+        def search_by_domain(username_answer):
+            api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-username"
+            url = f"{api_url}?username={username_answer}"
+            
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                data = response.json()
+                return data
+            except requests.exceptions.RequestException as e:
+                print(f"[!] An Error Occured: {e}")
+                return None
+        
+        result3 = search_by_domain(username_answer)
+        if result3:
+            print("\033[1;91m[+]\033[0m\033[1;97m Breached Data: \033[0m")
+            import json
+            print(json.dumps(result3, indent=4))
+        else:
+            print("\033[1;91m[+]\033[0m\033[1;97m No Data found or an Error Occurred. \033[0m")
+        
+
+    elif ten_input == "G" or "g":
+        os.system("cd $HOME")
+        os.system("sudo xosint || xosint || python xosint")
+    
+    else:
+        print("\033[1;91m[!]\033[0m\033[1;97mInvalid Command..exiting\033[0m")
+        time.sleep(0.0001)
+        exit()
+        
+
 
 #### DEEP WEB SCRAPING OSINT
 
@@ -900,6 +1488,7 @@ elif option == "17":
 	scrap()
 	main()
 
+
 elif option == "18":
     os.system("clear")
     print(banner)
@@ -908,13 +1497,178 @@ elif option == "18":
                      \033[1;91m[\033[1;33;40m18\033[0m\033[1;91m] \033[1;97m Protonmail OSINT
                      \033[1;91m[\033[1;33;40m19\033[0m\033[1;91m] \033[1;97m Vehicle Identification Number OSINT
                      \033[1;91m[\033[1;33;40m20\033[0m\033[1;91m] \033[1;97m Basic Github OSINT
-                     \033[1;91m[\033[1;33;40m21\033[0m\033[1;91m] \033[1;97m Vehicle License plate OSINT \033[1;91m[\033[0m\033[1;96mUNDER DEVELOPMENT\033[0m\033[1;91m]\033[0m
+                     \033[1;91m[\033[1;33;40m21\033[0m\033[1;91m] \033[1;97m Vehicle License plate OSINT
+                     \033[1;91m[\033[1;33;40m22\033[0m\033[1;91m] \033[1;97m ImageHunt \033[1;91m[\033[1;92mBETA\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m23\033[0m\033[1;91m] \033[1;97m NewsOSINT \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m24\033[0m\033[1;91m] \033[1;97m Phone number Location \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m25\033[0m\033[1;91m] \033[38;5;208m Tookie-OSINT \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m26\033[0m\033[1;91m] \033[1;97m Code Analysis \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     
+                     
                      \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
                      """) ##I would still add more here
     print(second_main_menu)
-    second_input = input('\033[1;91mxosint>> \033[0m')
+    second_input = input('\033[38;5;208mxosint>> \033[0m')
 
-    if second_input == "18":
+    
+    if second_input == "26":
+        def run_analyser():
+            file_source = input("\033[1;91m[?]\033[1;97m Enter path to the file to analyze (eg: .py or .js file): \033[0m")
+            
+            if not os.path.isfile(file_source):
+                print(f"\033[1;91m[!]\033[1;97m File not found: {file_source}")
+                sys.exit(1)
+            
+            file_extension = os.path.splitext(file_source)[1]
+            if file_extension == ".py":
+                analyze_python_file(file_source)
+            
+            elif file_extension == ".js":
+                analyze_javascript_file(file_source)
+            
+            else:
+                print(f"\033[1;91m[!]\033[1;97m Unsupported file type: {file_source}")
+                sys.exit(1)
+
+        
+        run_analyser()
+        sys.exit(1)
+        
+
+    if second_input == "25":
+        ##Add code here
+        print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mRunning Tookie-osint \033[1;91m[\033[1;92mOUR PARTNERS\033[0m\033[1;91m]")
+        time.sleep(2)
+        os.system("clear || cls")
+        print(banner)
+        print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mLoading OUR PARTNERS.....\033[0m")
+        time.sleep(0.5)
+        os.system("cls || clear")
+        print(tookie_banner)
+        print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mLaunching into Tookie-osint Installation....3s\033[0m")
+        time.sleep(3)
+        
+        #tookie_dir = ""
+        
+        def is_termux():
+            return "termux" in os.getenv("SHELL", "").lower()
+        
+        def clone_tookie_osint():
+            #global tookie_dir
+            home_dir = os.path.expanduser("~")
+            tookie_dir = os.path.join(home_dir, "tookie-osint")
+            
+            if is_termux():
+                print("Detected Termux. Setting up...")
+                os.system("termux-setup-storage")
+                os.system("ln -s storage/downloads Downloads")
+                os.system(f"git clone https://github.com/alfredredbird/tookie-osint {tookie_dir}")
+                os.chdir(tookie_dir)  
+                os.system(f"pip3 install -r {os.path.join(tookie_dir, 'requirements.txt')}")
+                run_tookie_osint(tookie_dir)  
+            else:
+                print(f"\033[1;91m[+]\033[1;97m Detected {platform.system()}. Cloning tookie-osint...\033[0m")
+                if not os.path.exists(tookie_dir):
+                    repo_url = "https://github.com//alfredredbird/tookie-osint.git"
+                    os.system(f"git clone {repo_url} {tookie_dir}")
+                    os.chdir(tookie_dir)  
+                    os.system(f"pip install -r {os.path.join(tookie_dir, 'requirements.txt')}")
+                    run_tookie_osint(tookie_dir)  
+                else:
+                    print("Tookie-OSINT already exists.")
+                    run_option = input("\033[1;91m[?]\033[1;97m Do you want to run Tookie-OSINT? (Y/N): \033[0m").strip().lower()
+                    
+                    if run_option == "y":
+                        os.chdir(tookie_dir)  
+                        run_tookie_osint(tookie_dir)
+                    elif run_option == "n":
+                        print("\033[1;91m[+]\033[1;97m Exiting program. \033[0m")
+                        sys.exit(1) # pylint: disable=unreachable
+                    else:
+                        print("\033[1;91m[+]\033[1;97m Invalid option. Exiting program. \033[0m")
+                        sys.exit(1) # pylint: disable=unreachable
+        
+        def run_tookie_osint(tookie_dir):
+            brib_path = os.path.join(tookie_dir, "brib.py")
+            if os.path.exists(brib_path):
+                if platform.system() == "Windows":
+                    os.system(f"python.exe {brib_path}")
+                else:
+                    os.system(f"python {brib_path}")
+            else:
+                print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mTookie-OSINT not found. Please clone before running \033[0m")
+                sys.exit(1)
+
+        
+                    
+        
+        def install_tookie_osint():
+            os.system("clear || cls")
+            print(tookie_banner)
+            tosint_main_menu = ("""
+                     \033[1;91m[??] Choose an Installation
+                     
+                     \033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m Clone into Tookie-OSINT
+                     \033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Run Tookie-OSINT 
+                     
+                     \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
+                     """)
+            print(tosint_main_menu)
+            t_option = input("\033[1;91m[\033[1;33;40m?\033[0m\033[1;91m] \033[1;93mSelect an option: \033[0m")
+            if t_option == "1":
+                clone_tookie_osint()
+            
+            elif t_option == "2":
+                home_dir =os.path.expanduser("~")
+                tookie_dir = os.path.join(home_dir, "tookie-osint")
+                run_tookie_osint(tookie_dir)
+            
+            else:
+                print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mInvalid option \033[0m")
+        
+        install_tookie_osint()
+
+
+    if second_input == "22":
+        image_hunt()
+        exit()
+    
+    elif second_input == "23":
+        newsOsint()
+        exit()
+        
+    elif second_input == "24":
+        os.system("clear")
+        print(banner)
+        ###Menu for Two methods
+        nine_main_menu = ("""
+                     \033[1;91m[??] Choose a Method for Phone number Location:
+                     \033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m Method 1 \033[1;91m[\033[1;92mLESS INFO\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Method 2 \033[1;91m[\033[1;92mMORE INFO\033[0m\033[1;91m]
+                     
+                     \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
+                     """)
+        print(nine_main_menu)
+        seven_input = input('\033[38;5;208mxosint>> \033[0m')
+        
+        if seven_input == '1':
+            phone_inf()
+            exit()
+            
+        elif seven_input == "2":
+            phone_inf2()
+            exit()
+        
+        elif seven_input == "G" or "g":
+            os.system("clear")
+            os.system("sudo xosint || xosint || python3 xosint")
+        
+        else:
+            print("\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mInvalid input")
+            exit()
+            
+    
+    elif second_input == "18":
         def extract_timestamp(mail, source_code):
             try:
                 timestamp = re.sub(':', '', re.search(':[0-9]{10}::', source_code.text)[0])
@@ -926,7 +1680,7 @@ elif option == "18":
         # Protonmail account validity check
         def protonmailaccountcheck():
             invalidEmail = True
-            regexEmail = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
+            regexEmail = r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
             print("\n\nYou want to know if a protonmail email is real or not?")
             while invalidEmail:
                 mail = input("\033[1;91m[+]\033[1;97m Enter the email(protonmail accounts only!!): \033[0m")
@@ -1069,7 +1823,7 @@ elif option == "18":
         # view pgp key within terminal
         def pgpkeyview():
             invalidEmail = True
-            regexEmail = "([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
+            regexEmail = r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
             
             print("\nInput protonmail user email to get user's PGP key\n")
             while invalidEmail:
@@ -1163,7 +1917,7 @@ elif option == "18":
             pgpkeyinformation()
         elif b_osint == "G" or "g":
             os.system("cd $HOME")
-            os.system("sudo xosint || xosint")
+            os.system("sudo xosint || xosint || python xosint")
         else:
             print("\033[1;91m[!]\033[0m\033[1;97mInvalid Command..exiting\033[0m")
             time.sleep(0.0001)
@@ -1261,7 +2015,7 @@ elif option == "18":
         
         elif c_input == "G" or "g":
             os.system("cd $HOME")
-            os.system("sudo xosint || xosint")
+            os.system("sudo xosint || xosint || python3 xosint")
         else:
             print("\033[1;91m[!]\033[0m\033[1;97mInvalid Command..exiting\033[0m")
             time.sleep(0.0001)
@@ -1356,7 +2110,11 @@ elif option == "18":
     
     elif second_input == "G" or "g":
         os.system("cd $HOME")
-        os.system("sudo xosint || xosint")
+        os.system("sudo xosint || xosint || python xosint")
+    
+    else:
+        print("\033[91mInvalid Option\033[0m")
+        exit()
 
 elif option == "99":
 	update()
