@@ -121,6 +121,7 @@ chmod +x *
 sudo bash setup.sh
 sudo xosint OR python xosint
 ```
+if your using Termux, Type the same commands from above without the "<b>sudo"</b> and replace "apt" commands to "pkg"
 
 # Installation using python virtual environment if normal installation doesnt work
 <p style="color: green"> The normal installation of Xosint might likely have some issues running or installing due to some missing python packages, use this method only if the normal installation and usage doesnt work!!
