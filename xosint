@@ -942,14 +942,14 @@ def update():
 #### Start main script
 ### 4, 5, 6, 7
 os.system("clear")
-global root
-root = tk.Tk()
-root.withdraw() 
+##global root
+##root = tk.Tk()
+##root.withdraw() 
 
 ##Fetchupdate
 ##update_script() ####----->ENABLE THIS 
 
-show_support_popup()
+##show_support_popup()
 print(banner)
 print(main_menu)
 option = input("\033[38;5;208mxosint>> \033[1;97m") 
