@@ -295,6 +295,9 @@ And so many More
 
 More features are still to come..Stay Tuned
 
+# ChangeLogs for 2.1.0
+- [1] Fixed TKinter popup problem on start up
+
 
 # ChangeLogs for 2.1
 - [1] Fixed updating
