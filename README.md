@@ -3,17 +3,17 @@ This is an osint tool which gathers useful and yet credible valid information ab
 <img src="images/x-osint_banner_white_texts.png" float="center">
 <center>
 <h2><img src="https://img.shields.io/badge/Author-AnonyminHack5-blueviolet"/>
-  <img src="https://img.shields.io/badge/Followers%20-%202.5k%20-%20red"/>
+  <img src="https://img.shields.io/badge/Followers%20-%202.6k%20-%20red"/>
   <img src="https://img.shields.io/badge/Tool-X--osint-red"/>
   <img src="https://img.shields.io/badge/Made%20with-Python%20and%20bash-yellowgreen"/>
-  <img src="https://img.shields.io/badge/Maintained-YES-green"/> <img src="https://img.shields.io/badge/Version-2.2-9cf"/>
+  <img src="https://img.shields.io/badge/Maintained-YES-green"/> <img src="https://img.shields.io/badge/Version-2.3-9cf"/>
   <img src="https://img.shields.io/badge/Bugs in code-0-green"><img src="https://img.shields.io/badge/Security Risk OWASP-None-blue">
   </center>
   </h2>
   <hr>
   
   # Menu
-<img src="images/X-osintv2.2.png" alt="X-osintv2.2" float="center"/>
+<img src="images/X-osintv2.3.png" alt="X-osintv2.3" float="center"/>
 
 # Bugs Report
 X-osint version 2.2 has undergone a deepsource code analysis scan to check for Security Risks and Bugs Risks, which displayes that X-OSint is free from Bugs so far in Version 2.2, If you do have version 2.1 installed, Kindly Update to newer version for improved changed and bug fixes.
@@ -35,6 +35,8 @@ X-osint version 2.2 has undergone a deepsource code analysis scan to check for S
   13) Protonmail OSINT
   14) Check Global InfoStealer Attack
   15) Phone Number Information Lookup
+  16) MetaData Extraction from any file
+  17) Text Analysis
   And many more...
 
   <b>MANY OTHER FEATURES SOON TO COME </b>
@@ -56,47 +58,56 @@ This tool would be updated regularly or as time progresses to improve it, fix mo
 <b>ALSO TYPE THE DOLLAR SIGN </b>
 
 #### 1) Type:
-> cd $HOME
+```
+cd $HOME
 
-> cd $PREFIX/bin
+cd $PREFIX/bin
 
-> rm xosint
+rm xosint
+```
 
 #### 2) Re-clone from git:
-> cd $HOME
+```
+cd $HOME
 
-> git clone https://github.com/TermuxHackz/X-osint
+git clone https://github.com/TermuxHackz/X-osint
 
-> cd X-osint
-
+cd X-osint
+```
 #### 3) Grant permissions and run install file
-> chmod +x *
+```
+chmod +x *
 
-> bash setup.sh
-
+bash setup.sh
+```
 And your all done!!!..and updated 
 
 <h3><u>How to Update for Linux</u></h3>
 <b>ALSO TYPE THE DOLLAR SIGN </b>
 
 #### 1) Type:
-> cd $HOME
+```
+cd $HOME
 
-> cd /usr/local/bin
+cd /usr/local/bin
 
-> sudo rm xosint
-
+sudo rm xosint
+```
 #### 2) Re-clone from GitHub
-> cd $HOME
+```
+cd $HOME
 
-> git clone https://github.com/TermuxHackz/X-osint
+git clone https://github.com/TermuxHackz/X-osint
 
-> cd X-osint
+cd X-osint
+```
 
 #### 3) Grant permissions and run install file
-> chmod +x *
+```
+chmod +x *
 
-> bash setup.sh
+bash setup.sh
+```
 
 And your all done!!!..and updated 
 
@@ -295,6 +306,15 @@ And so many More
 
 More features are still to come..Stay Tuned
 
+# ChangeLogs for 2.3
+- [1] Revamped Metadata Extraction to support any file type
+- [2] Added DNSinf OSINT: For benchmarking and performance testing of DNS (Domain Name System) servers and giving you credible information
+- [3] Added Text Analysis - powered by scapy for Fast and efficient NLP processing, Tokenization, POS tagging, NER, dependency parsing of texts.
+- [4] Added Network Mapper - for WIFI Networks (IN BETA)
+- [5] Added Disclaimer for using X-Osint
+- [6] Other bugs fixes and improvements.
+
+
 # ChangeLogs for 2.1.0
 - [1] Fixed TKinter popup problem on start up
 
@@ -325,6 +345,7 @@ Love my work and wish to support me, Buy me a coffee <a href="https://www.buymea
 
 ## Contributing
 Feel free to clone this project. For major changes, please open an issue first to discuss what you would like to change or add, thank you!!.
+DO NOT COPY CODE WITHOUT GIVING CREDITS :-
 
 ## Credits
 Some of the modules here and APIs used for the creation of X-osint, got the idea from them, and so i would like to give them credit as most of the features of X-osint wouldnt be so without these mentioned Devs.
@@ -333,24 +354,6 @@ Some of the modules here and APIs used for the creation of X-osint, got the idea
 - [3] SpiderAnonGreyHat
 - [4] [midnit3Z0mbi3](https://github.com/midnit3Z0mbi3)
 - [5] [Cavalier-HudsonRock](https://cavalier.hudsonrock.com/docs)
-
-
-#### New Features Added
-1. **Check Global InfoStealer Attack:**
-- This feature will check a database of over 27,941,924 computers which either emails or domains were compromised through global info-stealer campaigns performed by threat actors.
-
-2. **ImageHunt:**
-- ImageHunt is a Python-based reverse image search application that allows users to upload an image and search for similar images across the web using Google Custom Search. The application features a user-friendly GUI built with Tkinter. Currently being Worked On
-
-3. **Location Metadata From Image**
-- This feature will extract location metadata from an image file. including jpg and png, All you need to do is put in the path of the image and let the script extract the location metadata from the image and it would open the location of where the picture was taken in your respective map service. <b>If the location metadata isnt present in the image the script wont fetch anything </b>.
-
-4. **NewsOSINT**
-- This feature lets you search the entire news articles about any inputed keyword or query and gives you links to those articles
-
-5. **Code Analysis**
-- I've added a bonus called Code Analysis which aims to providing clear bugs or errors from your python file or Javascript file. More Languages will be surpported in Feature Updates.
-- **Note:** This feature is still in beta and might not work properly for all types of files
 
 
 # 📌 NOTE

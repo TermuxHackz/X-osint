@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
 
+import signal
+import tempfile
 from googlesearch import search # type: ignore
 from smtplib import SMTP, SMTPRecipientsRefused, SMTPSenderRefused, SMTPResponseException
 from email.mime.multipart import MIMEMultipart
 import re
+import json
 import os
 import time
 import socket
 import requests
+from ping3 import ping
 import ipaddress
 import readline
 import colorama
@@ -44,6 +48,385 @@ import requests
 from cryptography.fernet import Fernet # type: ignore
 import subprocess
 import shutil
+
+
+##DISCLAIMER
+ACCEPTANCE_FILE = '.disclaimer_accepted'
+
+DISCLAIMER_TEXT = """\033[1;97m
+Welcome to Xosint!!
+
+Disclaimer:
+The information contained on the Service is for general information purposes only.
+The Company (TermuxHackz)  assumes no responsibility for errors or omissions in the contents of the Service
+In no event shall the Company (TermuxHackz) be liable for any special, direct, indirect, consequential, or incidental damages or any damages whatsoever, whether in an action of contract, negligence or other tort, arising out of or in connection with the use of the Service or the contents of the Service. The Company reserves the right to make additions, deletions, or modifications to the contents on the Service at any time without prior notice.
+For more details, please visit:
+https://bit.ly/3TeaSMn
+
+By using this tool, you acknowledge and agree that you are solely responsible for your use of the tool.
+The developer of this tool is not liable for any misuse or illegal activities conducted using this tool.
+
+\033[0m"""
+
+def check_disclaimer():
+    if not os.path.exists(ACCEPTANCE_FILE):
+        print(DISCLAIMER_TEXT)
+        user_input = input("\033[1;93m[+]\033[1;97m Do you accept the disclaimer? (yes/no): ").strip().lower()
+        
+        if user_input == 'yes':
+            with open(ACCEPTANCE_FILE, 'w') as f:
+                f.write('accepted')
+            print("\033[1;93m[+]\033[1;97m Thank you for accepting the disclaimer.\033[0m")
+            os.chmod(ACCEPTANCE_FILE, 0o644)
+            sleep(1)
+            os.system("clear || cls")
+            
+        else:
+            print("\033[1;91m[+]\033[1;92m You must accept the disclaimer to use X-Osint.\033[0m")
+            sys.exit(1)
+
+##Exiftool
+
+def check_exiftool_installed():
+    """Check if ExifTool is installed."""
+    try:
+        result = subprocess.run(["exiftool", "-ver"], capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"ExifTool version {result.stdout.strip()} is already installed.")
+            return True
+        else:
+            return False
+    except FileNotFoundError:
+        return False
+
+def install_exiftool_windows():
+    url = "https://exiftool.org/exiftool-12.66.zip"
+    zip_file = "exiftool.zip"
+    exe_file = "exiftool.exe"
+
+    # Download the ExifTool zip file
+    print("Downloading ExifTool...")
+    subprocess.run(["curl", "-L", "-o", zip_file, url], check=True)
+
+    # Extract the zip file
+    print("Extracting ExifTool...")
+    subprocess.run(["tar", "-xf", zip_file], check=True)
+
+    # Rename the executable
+    extracted_file = "exiftool(-k).exe"
+    os.rename(extracted_file, exe_file)
+
+    # Optionally, add to PATH (e.g., copying to C:\Windows)
+    # Uncomment the following line to copy to C:\Windows
+    # subprocess.run(["copy", exe_file, "C:\\Windows"], check=True)
+
+    print("ExifTool installed successfully on Windows!")
+
+def install_exiftool_macos():
+    # Install ExifTool using Homebrew
+    print("Installing ExifTool via Homebrew...")
+    subprocess.run(["brew", "install", "exiftool"], check=True)
+    print("ExifTool installed successfully on macOS!")
+
+def install_exiftool_linux():
+    distro = platform.linux_distribution()[0].lower()
+
+    if 'ubuntu' in distro or 'debian' in distro:
+        print("Installing ExifTool on Ubuntu/Debian...")
+        subprocess.run(["sudo", "apt-get", "update"], check=True)
+        subprocess.run(["sudo", "apt-get", "install", "-y", "libimage-exiftool-perl"], check=True)
+
+    elif 'centos' in distro or 'rhel' in distro:
+        print("Installing ExifTool on CentOS/RHEL...")
+        subprocess.run(["sudo", "yum", "install", "-y", "perl-Image-ExifTool"], check=True)
+
+    else:
+        print("Unsupported Linux distribution. Please install ExifTool manually.")
+
+    print("ExifTool installed successfully on Linux!")
+
+def install_exiftool():
+    os_name = platform.system().lower()
+
+    if check_exiftool_installed():
+        print("ExifTool is already installed.")
+        return
+
+    if os_name == "windows":
+        install_exiftool_windows()
+    elif os_name == "darwin":
+        install_exiftool_macos()
+    elif os_name == "linux":
+        install_exiftool_linux()
+    else:
+        print(f"Unsupported OS: {os_name}. Please install ExifTool manually.")
+
+
+    
+##installpackage
+def install_package(package):
+    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+
+# Check and install required packages
+
+try:
+    import speedtest
+except ImportError:
+    print("speedtest-cli not found. Installing...")
+    install_package('speedtest-cli')
+    import speedtest
+
+
+try:
+    from ping3 import ping
+except ImportError:
+    print("ping3 not found. Installing...")
+    install_package('ping3')
+    from ping3 import ping
+
+try:
+    import spacy
+except ImportError:
+    print("spaCy not found. Installing...")
+    install_package('spacy')
+    os.system("python -m spacy download en_core_web_sm")
+    import spacy
+
+try:
+    from flask import Flask, render_template
+except ImportError:
+    print("Flask not found. Installing...")
+    install_package('flask')
+    from flask import Flask, render_template
+
+try:
+    from wifi import Cell, Scheme
+except ImportError:
+    print("wifi not found. Installing...")
+    install_package('wifi')
+    from wifi import Cell, Scheme
+    
+try:
+    import qrcode
+except ImportError:
+    print("qrcode not found. Installing...")
+    install_package('qrcode')
+    import qrcode
+
+   
+try:
+    install_exiftool()
+except subprocess.CalledProcessError as e:
+    print(f"An error occurred during installation: {e}")
+    sys.exit(1)
+except Exception as e:
+    print(f"An unexpected error occurred: {e}")
+    sys.exit(1)
+
+
+def get_geoip_info(ip):
+    response = requests.get(f"https://ipinfo.io/{ip}/json")
+    return response.json()
+
+def get_whois_info(ip):
+    response = requests.get(f"https://whois.arin.net/rest/ip/{ip}.json")
+    return response.json()
+
+def dns_query(dns_ip, domain_query):
+    try:
+        result = socket.gethostbyname_ex(domain_query)
+        return result
+    except Exception as e:
+        return str(e)
+
+def test_speed():
+    # Runs a speed test and returns download, upload speeds, and latency
+    st = speedtest.Speedtest()
+    st.get_best_server()
+    download_speed = st.download() / 1_000_000  # Convert to Mbps
+    upload_speed = st.upload() / 1_000_000  # Convert to Mbps
+    latency = st.results.ping
+    return download_speed, upload_speed, latency
+
+#COLORS
+RED = "\033[1;91m"
+GREEN = "\033[1;92m"
+YELLOW = "\033[1;93m"
+BLUE = "\033[1;94m"
+WHITE = "\033[1;97m"
+RESET = "\033[0m"
+
+##Metadatadef extract_metadata(file_path):
+def extract_metadata(file_path):
+    try:
+        # Build and run the ExifTool command
+        command = ["exiftool", "-j", file_path]
+        ##print(f"{BLUE}Running command:{RESET} {' '.join(command)}")
+        
+        # Execute the command and capture output
+        result = subprocess.run(command, capture_output=True, text=True)
+        
+        # Print raw output for debugging
+        #print(f"{YELLOW}Raw ExifTool output:{RESET} {result.stdout}")
+
+        # Check if the output is empty or invalid
+        if result.returncode != 0:
+            print(f"{RED}Error running ExifTool:{RESET} {result.stderr}")
+            return None
+
+        if not result.stdout:
+            print(f"{RED}Error:{RESET} No metadata was returned by ExifTool.")
+            return None
+
+        # Parse the JSON output
+        try:
+            metadata = json.loads(result.stdout)
+        except json.JSONDecodeError as e:
+            print(f"{RED}Error decoding JSON:{RESET} {e}")
+            return None
+        
+        if len(metadata) > 0:
+            return metadata[0]  # ExifTool returns a list of dictionaries
+        else:
+            print(f"{RED}Error:{RESET} Metadata list is empty.")
+            return None
+
+    except Exception as e:
+        print(f"{RED}Error extracting metadata:{RESET} {e}")
+        return None
+
+def extract_specific_metadata(metadata):
+    if not metadata:
+        return {}
+
+    title = metadata.get("PDF:Title") or metadata.get("ID3:Title") or metadata.get("XMP:Title")
+    author = metadata.get("PDF:Author") or metadata.get("ID3:Artist") or metadata.get("XMP:Creator")
+    creation_date = (metadata.get("EXIF:CreateDate") or 
+                     metadata.get("PDF:CreationDate") or 
+                     metadata.get("ID3:Year") or
+                     metadata.get("QuickTime:CreateDate") or
+                     metadata.get("XMP:CreateDate"))
+
+    latitude = (metadata.get("Composite:GPSLatitude") or
+                metadata.get("EXIF:GPSLatitude") or
+                metadata.get("QuickTime:GPSLatitude") or
+                metadata.get("XMP:GPSLatitude"))
+
+    longitude = (metadata.get("Composite:GPSLongitude") or
+                 metadata.get("EXIF:GPSLongitude") or
+                 metadata.get("QuickTime:GPSLongitude") or
+                 metadata.get("XMP:GPSLongitude"))
+
+    if latitude and longitude:
+        # Convert latitude and longitude from degrees and minutes to decimal degrees
+        latitude = convert_to_decimal_degrees(latitude)
+        longitude = convert_to_decimal_degrees(longitude)
+
+    return {
+        "Title": title,
+        "Author/Artist": author,
+        "Creation Date": creation_date,
+        "Location": (latitude, longitude) if latitude and longitude else None,
+    }
+
+def convert_to_decimal_degrees(coord):
+    """Convert GPS coordinates from degrees and minutes to decimal degrees."""
+    try:
+        if isinstance(coord, str):
+            coord = coord.replace("°", "").replace("'", "").replace('"', "").strip()
+            degrees, minutes = map(float, coord.split())
+            return degrees + (minutes / 60)
+        return coord
+    except ValueError:
+        return None
+
+def print_all_metadata(metadata):
+    for key, value in metadata.items():
+        print(f"{BLUE}{key}:{RESET} {WHITE}{value}{RESET}")
+
+def print_specific_metadata(specific_metadata):
+    for key, value in specific_metadata.items():
+        print(f"{BLUE}{key}:{RESET} {WHITE}{value}{RESET}")
+
+def open_map_location(lat, lon):
+    # Google Maps URL
+    google_maps_url = f"https://www.google.com/maps?q={lat},{lon}"
+    # Apple Maps URL
+    apple_maps_url = f"https://maps.apple.com/?q={lat},{lon}"
+
+    print(f"{GREEN}Opening location in Google Maps:{RESET} {google_maps_url}")
+    webbrowser.open(google_maps_url)
+
+    print(f"{GREEN}Opening location in Apple Maps:{RESET} {apple_maps_url}")
+    webbrowser.open(apple_maps_url)
+
+
+##network mpapping
+app = Flask(__name__)
+
+def scan_wifi_networks():
+    networks = []
+    try:
+        os_type = platform.system()
+        if os_type == "Linux":
+            scan_output = os.popen('sudo iwlist scan 2>/dev/null').read()
+            ssids = re.findall(r'ESSID:"(.*?)"', scan_output)
+            signals = re.findall(r'Signal level=(-\d+) dBm', scan_output)
+            networks = [{'ssid': ssid, 'signal': signal} for ssid, signal in zip(ssids, signals)]
+        elif os_type == "Darwin":  # macOS
+            scan_output = subprocess.check_output(['/usr/sbin/system_profiler', 'SPNetworkDataType'], text=True)
+            ssids = re.findall(r'SSID: (.+)', scan_output)
+            signals = re.findall(r'RSSI: (-\d+)', scan_output)
+            networks = [{'ssid': ssid, 'signal': signal} for ssid, signal in zip(ssids, signals)]
+        else:
+            print("Unsupported OS")
+    except Exception as e:
+        print(f"Error scanning Wi-Fi networks: {e}")
+    return networks  # Always return a list
+
+def get_current_wifi():
+    try:
+        os_type = platform.system()
+        if os_type == "Linux":
+            return os.popen("iwgetid -r").read().strip()
+        elif os_type == "Darwin": 
+            scan_output = subprocess.check_output(['/usr/sbin/system_profiler', 'SPNetworkDataType'], text=True)
+            match = re.search(r'SSID: (.+)', scan_output)
+            return match.group(1) if match else "Not Connected"
+        else:
+            return "Unsupported OS"
+    except Exception as e:
+        print(f"Error getting current Wi-Fi: {e}")
+        return "Unknown"
+
+def generate_wifi_qr(ssid, password=None):
+    if ssid and ssid != "Not Connected":
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        wifi_data = f"WIFI:S:{ssid};T:WPA;P:{password};;" if password else f"WIFI:S:{ssid};;"
+        qr.add_data(wifi_data)
+        qr.make(fit=True)
+        img = qr.make_image(fill='black', back_color='white')
+        img.save("static/wifi_qr.png")
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/network_mapper')
+def network_mapper():
+    current_wifi = get_current_wifi()
+    wifi_networks = scan_wifi_networks()
+    
+    print("Current Wi-Fi:", current_wifi)
+    print("Wi-Fi Networks:", wifi_networks)
+    
+    generate_wifi_qr(current_wifi)  # Generate QR code for current Wi-Fi
+    return render_template('network_mapper.html', current_wifi=current_wifi, wifi_networks=wifi_networks)
 
 
 ##Code Analysis
@@ -556,9 +939,8 @@ banner = ("""\033[38;5;208m
    \033[1;37mAn Open Source Intelligence Framework                          
         Created by: AnonyminHack5
         Team: TermuxHackz Society\033[0m
-        	Version: \033[1;92m2.2\033[0m
+        	Version: \033[1;92m2.3\033[0m
 	   \033[1;97mPlatform: \033[0m\033[1;96m""" + platform.system())
-
 
 for col in banner:
     print(colors.CRED2 + col, end="")
@@ -568,22 +950,22 @@ for col in banner:
 
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
-	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m IP Address Information
-	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Information
-	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Get Location from Image  \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+	\033[1;91m[\033[1;33;40m1\033[0m\033[1;91m] \033[1;97m IP Address Info
+	\033[1;91m[\033[1;33;40m2\033[0m\033[1;91m] \033[1;97m Email Address Info
+	\033[1;91m[\033[1;33;40m3\033[0m\033[1;91m] \033[1;97m Extract Location from Image
 	\033[1;91m[\033[1;33;40m4\033[0m\033[1;91m] \033[1;97m Host Search
 	\033[1;91m[\033[1;33;40m5\033[0m\033[1;91m] \033[1;97m Ports
 	\033[1;91m[\033[1;33;40m6\033[0m\033[1;91m] \033[1;97m Exploit CVE
-	\033[1;91m[\033[1;33;40m7\033[0m\033[1;91m] \033[1;97m Exploit Open Source Vulnerability Database 
+	\033[1;91m[\033[1;33;40m7\033[0m\033[1;91m] \033[1;97m Exploit O.S.V.D           
 	\033[1;91m[\033[1;33;40m8\033[0m\033[1;91m] \033[1;97m DNS Lookup
 	\033[1;91m[\033[1;33;40m9\033[0m\033[1;91m] \033[1;97m DNS Reverse
-        \033[1;91m[\033[1;33;40m10\033[0m\033[1;91m] \033[1;97mEmail Finder
-        \033[1;91m[\033[1;33;40m11\033[0m\033[1;91m] \033[1;97mExtract Metadata from image
+        \033[1;91m[\033[1;33;40m10\033[0m\033[1;91m] \033[1;97mEmail Finder               \033[1;91m[\033[1;33;40m101\033[0m\033[1;91m] \033[1;97mWhat's New?
+        \033[1;91m[\033[1;33;40m11\033[0m\033[1;91m] \033[1;97mMetadata Extraction\033[1;91m[\033[1;92mNEW\033[0m\033[1;91m]
         \033[1;91m[\033[1;33;40m12\033[0m\033[1;91m]\033[1;97m Check Twitter Status
         \033[1;91m[\033[1;33;40m13\033[0m\033[1;91m]\033[1;97m Subdomain Enumeration
         \033[1;91m[\033[1;33;40m14\033[0m\033[1;91m]\033[1;97m Google Dork Hacking
         \033[1;91m[\033[1;33;40m15\033[0m\033[1;91m]\033[1;97m SMTP Analysis
-        \033[1;91m[\033[1;33;40m16\033[0m\033[1;91m]\033[1;97m Check Global InfoStealer Attack \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+        \033[1;91m[\033[1;33;40m16\033[0m\033[1;91m]\033[1;97m Check Global InfoStealer Attack
         \033[1;91m[\033[1;33;40m17\033[0m\033[1;91m]\033[1;97m Dark Web Search
         \033[1;91m[\033[1;33;40m18\033[0m\033[1;91m]\033[38;5;208m Next Tools >
         \033[1;91m[\033[1;33;40m19\033[0m\033[1;91m]\033[1;97m Report bugs
@@ -940,6 +1322,7 @@ def update():
 		exit
 		
 #### Start main script
+###maincode
 ### 4, 5, 6, 7
 os.system("clear")
 ##global root
@@ -949,7 +1332,10 @@ os.system("clear")
 ##Fetchupdate
 ##update_script() ####----->ENABLE THIS 
 
-##show_support_popup()
+##show_support_popup() --> ENABLE THIS
+##DIsclaimerstart
+check_disclaimer()
+
 print(banner)
 print(main_menu)
 option = input("\033[38;5;208mxosint>> \033[1;97m") 
@@ -1110,25 +1496,27 @@ elif option == "10":
 		print(json.dumps(parsed, indent=2, sort_keys=True))
 
 elif option == "11":
-	print("\033[1;91m[!]NOTICE:\033[0m\033[1;93m To get a better metadata of the image please do not use images from whatsapp or social media platforms as they strip away metadata from images, also do not use screenshot images, USE IMAGES TAKEN FROM A DEVICE CAMERA THANK YOU [!]\033[0m")
-	print()
-	imagename = input("\033[1;91m[+]\033[0m\033[1;97m Enter Correct path of the image (JPEG ONLY): \033[0m")
-	print("")
-	print()
-	# open the image
-	exif_dict = piexif.load(imagename)
-	print(f'Metadata for {imagename}:')
-	for ifd in exif_dict:
-		print(f'{ifd}:')
-		for tag in exif_dict[ifd]:
-			tag_name = piexif.TAGS[ifd][tag]["name"]
-			tag_value = exif_dict[ifd][tag]
-			
-			if isinstance(tag_value, bytes):
-				tag_value = tag_value[:10]
-			print(f'\t{tag_name:25}: {tag_value}')
-	print()
+    file_path = input("\033[1;91m[+]\033[0m\033[1;97m Enter the path of any file: \033[0m")
+    if not os.path.isfile(file_path):
+        print("{RED}Error:{RESET} The file does not exist. Please check the path and try again.")
+    else:
+        metadata = extract_metadata(file_path)
+        if metadata:
+            print(f"\n{GREEN}Extracting all metadata for {file_path}...{RESET}\n")
+            print_all_metadata(metadata)
 
+            print(f"\n{GREEN}Extracting specific metadata for {file_path}...{RESET}\n")
+            specific_metadata = extract_specific_metadata(metadata)
+            print_specific_metadata(specific_metadata)
+
+            if specific_metadata.get("Location"):
+                lat, lon = specific_metadata["Location"]
+                print(f"\n{GREEN}Geolocation data found: Latitude = {lat}, Longitude = {lon}{RESET}")
+                open_map_location(lat, lon)
+            else:
+                print(f"\n{YELLOW}No geolocation data found. \n{GREEN}Use option 3 from X-osint menu to retry getting the location if its an image file you attached{RESET}")
+        else:
+            print(f"{RED}No metadata could be extracted from the file.{RESET}")
 		
 elif option == "12":
 	email_add = input("\033[1;91m[+]\033[0m\033[1;97mEnter email: \033[0m")
@@ -1499,18 +1887,101 @@ elif option == "18":
                      \033[1;91m[\033[1;33;40m20\033[0m\033[1;91m] \033[1;97m Basic Github OSINT
                      \033[1;91m[\033[1;33;40m21\033[0m\033[1;91m] \033[1;97m Vehicle License plate OSINT
                      \033[1;91m[\033[1;33;40m22\033[0m\033[1;91m] \033[1;97m ImageHunt \033[1;91m[\033[1;92mBETA\033[0m\033[1;91m]
-                     \033[1;91m[\033[1;33;40m23\033[0m\033[1;91m] \033[1;97m NewsOSINT \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
-                     \033[1;91m[\033[1;33;40m24\033[0m\033[1;91m] \033[1;97m Phone number Location \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
-                     \033[1;91m[\033[1;33;40m25\033[0m\033[1;91m] \033[38;5;208m Tookie-OSINT \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
-                     \033[1;91m[\033[1;33;40m26\033[0m\033[1;91m] \033[1;97m Code Analysis \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m23\033[0m\033[1;91m] \033[1;97m NewsOSINT
+                     \033[1;91m[\033[1;33;40m24\033[0m\033[1;91m] \033[1;97m Phone number Location 
+                     \033[1;91m[\033[1;33;40m25\033[0m\033[1;91m] \033[38;5;208m Tookie-OSINT
+                     \033[1;91m[\033[1;33;40m26\033[0m\033[1;91m] \033[1;97m Code Analysis
+                     \033[1;91m[\033[1;33;40m27\033[0m\033[1;91m] \033[1;97m DNSInf OSINT \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m28\033[0m\033[1;91m] \033[1;97m Text Analysis \033[1;91m[\033[1;92mNEW!\033[0m\033[1;91m]
+                     \033[1;91m[\033[1;33;40m29\033[0m\033[1;91m] \033[1;97m Network Mapper \033[1;91m[\033[1;92mBETA!\033[0m\033[1;91m]
                      
                      
                      \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
+                     \033[1;91m[\033[1;33;40m99\033[0m\033[1;91m] \033[1;97m Quit X-osint
                      """) ##I would still add more here
     print(second_main_menu)
     second_input = input('\033[38;5;208mxosint>> \033[0m')
-
     
+
+
+##Network Mapper
+    if second_input == "29":
+
+        app.run(host='0.0.0.0', port=8000)
+        sys.exit(1)
+        
+    
+    if second_input == "99":
+        #print("\033[1;92mExiting X-osint Program...\033[0m")
+        exit()
+    
+##Text Analysis
+    if second_input == "28":
+        information = """Text Analysis is used to analyze, process, and extract information from text data using NLP processing, \nwith an Integration with deep learning frameworks \nEg: Apple is looking at buying U.K. startup for $1 billion."""
+        print(information)
+        nlp = spacy.load('en_core_web_sm')
+        ##text = "Apple is looking at buying U.K. startup for $1 billion."
+        text = input("\n\033[1;91m[?]\033[1;97m Enter the Text To Analyse: \033[1;94m")
+        doc = nlp(text)
+        
+        print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mTokens: \033[0m")
+        for token in doc:
+            print(token.text)
+            
+        
+        print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mPOS Tags: \033[0m")
+        for token in doc:
+            print(f"{token.text}: {token.pos_}")
+            
+        print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mNamed Entities: \033[0m")
+        for ent in doc.ents:
+            print(f"{ent.text}: {ent.label_}")
+            sys.exit(1)
+
+##DnsInf Action    
+    if second_input == "27":
+        def dnsinf():
+            dnsinf_server = input("\033[1;91m[?]\033[1;97m Enter the DNS server IP address you want to test (e.g., 8.8.8.8): \033[0m")
+            domain_query = input("\033[1;91m[?]\033[1;97m Enter a domain to query (e.g., example.com): \033[0m")
+            
+            geoip_info = get_geoip_info(dnsinf_server)
+            print(f"\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mGeolocation Information for {dnsinf_server}: \033[0m")
+            print(json.dumps(geoip_info, indent=4))
+       
+            
+            whois_info = get_whois_info(dnsinf_server)
+            print(f"\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mWHOIS Information for {dnsinf_server}:\033[0m")
+            print(json.dumps(whois_info, indent=4))
+           
+            
+            dns_result = dns_query(dnsinf_server, domain_query)
+            print(f"\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mDNS Query Result for {domain_query} using {dnsinf_server}: \033[0m")
+            print(dns_result)
+         
+            
+            ping_time = ping(dnsinf_server)
+            if ping_time:
+                print(f"\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mPing to DNS server {dnsinf_server}\033[0m: {ping_time * 1000:.2f} ms")
+            else:
+                print(f"\n\033[1;91m[!]\033[1;97mPing to DNS server {dnsinf_server} failed.\033[0m")
+          
+            
+            print(f"\n\033[1;91m[*]\033[1;97m Performing speed test on dns server {dnsinf_server}...\033[1;91m[*]\033[1;97m")
+            download_speed, upload_speed, latency = test_speed()
+            sleep(0.1)
+            print(f"\033[1;91m➤\033[1;93m Download Speed\033[0m: {download_speed:.2f} Mbps")
+            sleep(0.1)
+            print(f"\033[1;91m➤\033[1;93m Upload Speed\033[0m: {upload_speed:.2f} Mbps")
+            sleep(0.1)
+            print(f"\033[1;91m➤\033[1;93m Latency\033[0m: {latency:.2f} ms")
+            print("")
+        
+            sys.exit(1)
+            
+            
+        
+        dnsinf()
+
     if second_input == "26":
         def run_analyser():
             file_source = input("\033[1;91m[?]\033[1;97m Enter path to the file to analyze (eg: .py or .js file): \033[0m")
@@ -2112,6 +2583,7 @@ elif option == "18":
         os.system("cd $HOME")
         os.system("sudo xosint || xosint || python xosint")
     
+    
     else:
         print("\033[91mInvalid Option\033[0m")
         exit()
@@ -2124,6 +2596,264 @@ elif option == "00":
 elif option == "100":
 	print(about)
 	exit
+
+elif option == "101":
+    html_content = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's New in Xosint?</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+  rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+  href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+  rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.min.css"
+  rel="stylesheet"
+/>
+</head>
+<body>
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.3.2/mdb.umd.min.js"
+></script>
+    <div class="container mt-4">
+        <h1 class="text-center">What's New in Xosint?</h1>
+
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Last Updated:  August 18, 12:30PM BST</li>
+  </ol>
+</nav>
+        <h2>ChangeLogs for 2.3</h2>
+        <ul>
+            <li>Revamped Metadata Extraction to support any file type</li>
+            <li>Added DNSinf OSINT: For benchmarking and performance testing of DNS (Domain Name System) servers and giving you credible information</li>
+            <li>Added Text Analysis - powered by scapy for Fast and efficient NLP processing, Tokenization, POS tagging, NER, dependency parsing of texts.</li>
+            <li>Added Network Mapper - for WIFI Networks (IN BETA)</li>
+            <li>Added Disclaimer for using X-Osint</li>
+            <li>Other bugs fixes and improvements.</li>
+        </ul>
+
+        <h2>ChangeLogs for 2.2</h2>
+        <ul>
+            <li>Fixed Issue where the python module folium wouldnt install</li>
+            <li>Fixed Issue where the python module numpy wouldnt install</li>
+            <li>Fixed Issue where the python module google-search wouldnt install</li>
+            <li>Fixed Issue where number 2 Option wouldnt work </li>
+            <li>Phone number information is now in the "Next Menu"</li>
+            <li>Fixed issues where The 'SyntaxWarning' you're encountering is due to the use of invalid escape sequences in regular expression strings</li>
+        </ul>
+        
+        
+        <h2>ChangeLogs for 2.1.0</h2>
+        <ul>
+            <li>Fixed TKinter popup problem on start up</li>
+        </ul>
+
+        <h2>ChangeLogs for 2.1</h2>
+        <ul>
+            <li>Fixed updating</li>
+            <li>Fixed Number 3 Option error</li>
+            <li>Changed Banner</li>
+            <li>Changed User interface</li>
+            <li>Added Features</li>
+            <li>Improved Speed</li>
+            <li>And that's about it, if you face any errors or bugs kindly mail them to me or open an Issue in GitHub</li>
+        </ul>
+    </div>
+    <!-- Footer -->
+<footer class="text-center text-lg-start bg-body-tertiary text-muted">
+  <!-- Section: Social media -->
+  <section class="d-flex justify-content-center justify-content-lg-between p-4 border-bottom">
+    <!-- Left -->
+    <div class="me-5 d-none d-lg-block">
+      <span>Get connected with us on social networks:</span>
+    </div>
+    <!-- Left -->
+
+    <!-- Right -->
+    <div>
+      <a href="https://twitter.com/tech_grok" class="me-4 text-reset">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="https://google.com/search?q=TermuxHackz" class="me-4 text-reset">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="https://github.com/TermuxHackz" class="me-4 text-reset">
+        <i class="fab fa-github"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </section>
+  <!-- Section: Social media -->
+
+  <!-- Section: Links  -->
+  <section class="">
+    <div class="container text-center text-md-start mt-5">
+      <!-- Grid row -->
+      <div class="row mt-3">
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+          <!-- Content -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            <i class="fas fa-gem me-3"></i>Termuxhackz
+          </h6>
+          <p>
+            Welcome to X-osint where you can read all changelogs and check out whats new in X-osint.
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            tools
+          </h6>
+          <p>
+            <a href="https://termuxhackz.github.io/tools/qr-code-generator.html" class="text-reset">QR Code Generator</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/tools/base64decoder.html" class="text-reset">Base64 Decoder and Encoder</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/tools/video-to-gif.html" class="text-reset">Convert Video to Gif</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/download-courses.html" class="text-reset">Courses</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">
+            Useful links
+          </h6>
+          <p>
+            <a href="https://termuxhackz.github.io" class="text-reset">Website</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/Types-of-web-hacking-techniques.html" class="text-reset">Web Hacking</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/How-to-hack-ftp-web-clients-sites.html" class="text-reset">Hacking FTP Web clients</a>
+          </p>
+          <p>
+            <a href="https://termuxhackz.github.io/How-to-create-a-deface-script.html" class="text-reset">Web Defacing</a>
+          </p>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+          <!-- Links -->
+          <h6 class="text-uppercase fw-bold mb-4">Contact</h6>
+          <p><i class="fas fa-home me-3"></i>Europe, Somewhere</p>
+          <p>
+            <i class="fas fa-envelope me-3"></i>
+            AnonyminHack5@protonmail.com
+          </p>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row -->
+    </div>
+  </section>
+  <!-- Section: Links  -->
+
+  <!-- Copyright -->
+  <div class="text-center p-4" style="background-color: rgba(0, 0, 0, 0.05);">
+    © 2024 Copyright:
+    <a class="text-reset fw-bold" href="https://github.com/TermuxHackz">TermuxHackz</a>
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+</body>
+</html>
+"""
+    def create_html_file(content):
+        """Create an HTML file with the provided content and return the file path."""
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".html")
+        temp_file.write(content.encode('utf-8'))
+        temp_file.close()
+        return temp_file.name
+
+    def start_node_server(html_file_path):
+        """Start a Node.js server to serve the HTML file."""
+        # Node.js server script
+        node_script = f"""
+    const http = require('http');
+    const fs = require('fs');
+    const path = require('path');
+
+    const port = 3000;
+    const filePath = path.resolve('{html_file_path}');
+
+    const requestListener = function (req, res) {{
+        fs.readFile(filePath, function(err, data) {{
+            if (err) {{
+                res.writeHead(500, {{ 'Content-Type': 'text/plain' }});
+                res.end('500 Server Error');
+                return;
+            }}
+            res.writeHead(200, {{ 'Content-Type': 'text/html' }});
+            res.end(data);
+        }});
+    }};
+
+    const server = http.createServer(requestListener);
+    server.listen(port, () => {{
+        console.log(`Visit the server below to see whats new in X-osint`)
+        console.log(`Server is running at http://localhost:${{port}}`);
+    }});
+    """
+
+    # Save the Node.js script to a temporary file
+        node_script_file = tempfile.NamedTemporaryFile(delete=False, suffix=".js")
+        node_script_file.write(node_script.encode('utf-8'))
+        node_script_file.close()
+
+        # Run the Node.js server
+        process = subprocess.Popen(["node", node_script_file.name])
+        return process
+
+    def handle_interrupt(signal, frame):
+        """Handle keyboard interrupts (Ctrl+C)."""
+        print("\nKeyboard interrupt received. Shutting down server...")
+        if server_process:
+            server_process.terminate()
+        sys.exit(0)
+    
+    signal.signal(signal.SIGINT, handle_interrupt)
+    
+    # Create HTML file
+    html_file = create_html_file(html_content)
+    
+    # Start Node.js server
+    server_process = start_node_server(html_file)
+    
+    try:
+        # Keep the script running to maintain the server
+        print(f"{GREEN}Server started. Press Ctrl+C to stop.{RESET}")
+        server_process.wait()
+    except KeyboardInterrupt:
+        # Handle keyboard interrupt
+        handle_interrupt(None, None)
 
 
 ### ADD NEXT MAIN MENU TO IT

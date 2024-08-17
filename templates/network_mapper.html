@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Network Mapper</title>
+    <!-- Bootstrap CSS CDN -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+    <style>
+        body {
+            padding-top: 50px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 900px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+        canvas {
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">Network Mapper</a>
+    </nav>
+
+    <div class="container">
+        <h1 class="my-4">Network Mapper</h1>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Current Wi-Fi</h5>
+                <p class="card-text">SSID: {{ current_wifi if current_wifi else 'Not Connected' }}</p>
+                <img src="{{ url_for('static', filename='wifi_qr.png') }}" alt="QR Code" class="img-fluid">
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Available Wi-Fi Networks</h5>
+                {% if wifi_networks and wifi_networks|length > 0 %}
+                    <ul>
+                        {% for network in wifi_networks %}
+                        <li>{{ network.ssid }} - Signal: {{ network.signal }} dBm</li>
+                        {% endfor %}
+                    </ul>
+                    <canvas id="wifiChart"></canvas>
+                {% else %}
+                    <p>No Wi-Fi networks found.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var ctx = document.getElementById('wifiChart').getContext('2d');
+            var wifiNetworks = {{ wifi_networks|tojson|safe }};
+            if (wifiNetworks.length > 0) {
+                var labels = wifiNetworks.map(function(network) {
+                    return network.ssid;
+                });
+                var data = wifiNetworks.map(function(network) {
+                    return network.signal;
+                });
+
+                var wifiChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Signal Strength',
+                            data: data,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
