@@ -15,6 +15,13 @@ This is an osint tool which gathers useful and yet credible valid information ab
   # Menu
 <img src="images/X-osintv2.3.png" alt="X-osintv2.3" float="center"/>
 
+# 📣Promotion
+Try out the following Discord Bot and leave your review 
+- [Airpods firmware Discord Bot](https://discord.com/oauth2/authorize?client_id=1288958074777767978&permissions=1126589552651504&integration_type=0&scope=bot+applications.commands)
+- [Apple SUpport Discord Bot](https://top.gg/bot/1279505556347949147/invite)
+- [Apple Newsroom Bot](https://top.gg/bot/1278973808752988171/invite)
+
+
 # Bugs Report
 X-osint version 2.2 has undergone a deepsource code analysis scan to check for Security Risks and Bugs Risks, which displayes that X-OSint is free from Bugs so far in Version 2.2, If you do have version 2.1 installed, Kindly Update to newer version for improved changed and bug fixes.
 <img src="bugs_report/bugs_info.jpg" alt="Bug Report" float="center">
