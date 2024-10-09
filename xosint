@@ -48,6 +48,7 @@ import requests
 from cryptography.fernet import Fernet # type: ignore
 import subprocess
 import shutil
+import distro
 
 
 ##DISCLAIMER
@@ -129,14 +130,21 @@ def install_exiftool_macos():
     print("ExifTool installed successfully on macOS!")
 
 def install_exiftool_linux():
-    distro = platform.linux_distribution()[0].lower()
+    distroName = ""
+    # Check if python version <= 3.5, 
+    # platform.linux_distribution is deprecated since 3.5 
+    # and removed since 3.7
+    if (sys.version_info[0] <= 3 and sys.version_info[1] <= 5):
+        distroName = platform.linux_distribution()[0].lower()
+    else:
+        distroName = distro.id()
 
-    if 'ubuntu' in distro or 'debian' in distro:
+    if 'ubuntu' in distroName or 'debian' in distroName:
         print("Installing ExifTool on Ubuntu/Debian...")
         subprocess.run(["sudo", "apt-get", "update"], check=True)
         subprocess.run(["sudo", "apt-get", "install", "-y", "libimage-exiftool-perl"], check=True)
 
-    elif 'centos' in distro or 'rhel' in distro:
+    elif 'centos' in distroName or 'rhel' in distroName:
         print("Installing ExifTool on CentOS/RHEL...")
         subprocess.run(["sudo", "yum", "install", "-y", "perl-Image-ExifTool"], check=True)
 
