@@ -20,6 +20,7 @@ Try out the following Discord Bot and leave your review
 - [Airpods firmware Discord Bot](https://discord.com/oauth2/authorize?client_id=1288958074777767978&permissions=1126589552651504&integration_type=0&scope=bot+applications.commands)
 - [Apple SUpport Discord Bot](https://top.gg/bot/1279505556347949147/invite)
 - [Apple Newsroom Bot](https://top.gg/bot/1278973808752988171/invite)
+- [SassGuard Bot](https://sassguard.app)
 
 
 # Bugs Report
