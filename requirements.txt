@@ -1,3 +1,4 @@
+# Видалено із PyPi
 adblockparser
 aiohappyeyeballs
 aiohttp
