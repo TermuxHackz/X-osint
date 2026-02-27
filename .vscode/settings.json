@@ -1,0 +1,4 @@
+{
+    "github.codespaces.devcontainerChangedNotificationStyle": "modal",
+    "github.codespaces.usePortForwardingServiceForHTTPS": false
+}
