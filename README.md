@@ -142,6 +142,28 @@ sudo xosint OR python xosint
 ```
 if your using Termux, Type the same commands from above without the "<b>sudo"</b> and replace "apt" commands to "pkg"
 
+## Telegram chat phone parser
+
+Added a standalone parser for extracting phone numbers from Telegram chats.
+
+From an exported chat file:
+
+```bash
+python3 tg_chat_number_parser.py /path/to/chat_export.json -o phones.csv --json phones.json
+```
+
+By public Telegram chat link:
+
+```bash
+python3 tg_chat_number_parser.py "https://t.me/example_chat" --pages 3 -o phones.csv --json phones.json
+```
+
+Supported input formats:
+- `.json` (Telegram Desktop export)
+- `.txt`
+- `.html`
+- `https://t.me/...` public links
+
 # Installation using python virtual environment if normal installation doesnt work
 <p style="color: green"> The normal installation of Xosint might likely have some issues running or installing due to some missing python packages, use this method only if the normal installation and usage doesnt work!!
 </p>

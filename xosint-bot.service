@@ -1,0 +1,15 @@
+[Unit]
+Description=X-osint Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/X-osint
+EnvironmentFile=/root/.xosint-bot.env
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/root/X-osint/venv/bin/python /root/X-osint/telegram_bot.py
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

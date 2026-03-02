@@ -1,0 +1,6 @@
+{
+    "github.copilot.nextEditSuggestions.enabled": false,
+    "chatgpt.openOnStartup": true,
+    "chatgpt.runCodexInWindowsSubsystemForLinux": true,
+    "chatgpt.commentCodeLensEnabled": false
+}
