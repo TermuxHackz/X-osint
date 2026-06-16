@@ -142,6 +142,13 @@ sudo xosint OR python xosint
 ```
 if your using Termux, Type the same commands from above without the "<b>sudo"</b> and replace "apt" commands to "pkg"
 
+# Usage
+Once installed, X-osint runs as a single interactive command, there is nothing else to type:
+```
+xosint
+```
+This opens the numbered menu shown in the image above. Type the number of the option you want (for example `1` for IP Address Info, `2` for Email Address Info, `15` for SMTP Analysis) and press Enter, then follow the prompts. Type `00` from the main menu at any time to quit.
+
 # Installation using python virtual environment if normal installation doesnt work
 <p style="color: green"> The normal installation of Xosint might likely have some issues running or installing due to some missing python packages, use this method only if the normal installation and usage doesnt work!!
 </p>
@@ -154,7 +161,7 @@ cd X-osint
 chmod +x *.sh
 python3 -m venv X-osint_venv
 source X-osint_venv/bin/activate
-pip install google
+pip install -r requirements.txt
 sudo bash setup.sh
 sudo xosint OR python xosint
 
@@ -389,16 +396,14 @@ from googlesearch import search
 ModuleNotFoundError: No module named 'googlesearch'
   
 
-<u>Solution: </u> Kindly make sure you ran the `bash setup.sh` file and make sure you don't interrupt the setup process and after you run that, and doesnt still work type `pip install google` and re run xosint.
-  if your still having issue with it run `pip install googlesearch-python` and run xosint. That should solve your problem with xosint. Thank you and share to friends.
+<u>Solution: </u> Kindly make sure you ran the `bash setup.sh` file and make sure you don't interrupt the setup process. If the error still shows up afterwards, run <code>pip install -r requirements.txt</code> (add <code>--break-system-packages</code> on Linux if pip refuses) from inside the X-osint folder and re-run xosint. Do <b>not</b> run <code>pip install google</code>, that is a different, unrelated package and will not fix this.
+
+2) ModuleNotFoundError for ping3, stripe, prompt_toolkit, distro, opencage, phonenumbers, piexif, colorama or any other package xosint imports?<br>
+<u>Solution: </u> Same fix as above, run <code>pip install -r requirements.txt</code> from inside the X-osint folder. These are all listed in requirements.txt and setup.sh installs them automatically, this only happens if setup.sh was interrupted or skipped.
 <br>
 
-2) Having an npm error when installing eslint?<br>
-<u>Solution: </u>Type <code>curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash </code>
-Then type <code>source ~/.bashrc</code> OR <code></code>source ~/.zshrc</code>
-<br>
-Then type <code>nvm install node</code><br><code>nvm use node</code><br><code>nvm alais default node</code><br><code>npm cache clean --force</code><br>
-Then install eslint again: <code>npm install -g eslint</code>
+3) ModuleNotFoundError: No module named 'tkinter'?<br>
+<u>Solution: </u> tkinter is not a pip package, it ships with your OS/Termux. On Termux run <code>pkg install python-tkinter</code>, on Debian/Kali/Ubuntu run <code>sudo apt install python3-tk</code>, then re-run xosint.
 
 
 

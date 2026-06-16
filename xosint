@@ -18,33 +18,25 @@ import colorama
 from colorama import *
 from time import sleep
 import sys
-import json
-from PIL import Image
+from PIL import Image, ImageTk
 from PIL.ExifTags import TAGS
 import piexif
 from prompt_toolkit import print_formatted_text, HTML
 from pathlib import Path
 import platform
-from datetime import datetime
+from datetime import datetime, timedelta
 import phonenumbers # type: ignore
 from phonenumbers import geocoder # type: ignore
 import opencage
 from bs4 import BeautifulSoup as bs
+from bs4 import BeautifulSoup
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, filedialog, simpledialog
 import webbrowser
 import stripe # type: ignore
-import tkinter as tk
-from tkinter import filedialog, simpledialog, messagebox
-from PIL import Image, ImageTk
 import base64
 from googleapiclient.discovery import build # type: ignore
-import requests
-from bs4 import BeautifulSoup
-import webbrowser
-from datetime import datetime, timedelta
 from flask import Flask, request, render_template_string
-import requests
 from cryptography.fernet import Fernet # type: ignore
 import subprocess
 import shutil
@@ -130,28 +122,22 @@ def install_exiftool_macos():
     print("ExifTool installed successfully on macOS!")
 
 def install_exiftool_linux():
-    distroName = ""
-    # Check if python version <= 3.5, 
-    # platform.linux_distribution is deprecated since 3.5 
-    # and removed since 3.7
-    if (sys.version_info[0] <= 3 and sys.version_info[1] <= 5):
-        distroName = platform.linux_distribution()[0].lower()
-    else:
-        distroName = distro.id()
+    distroName = distro.id().lower()
+    distroLike = distro.like().lower()
 
-    if 'ubuntu' in distroName or 'debian' in distroName:
-        print("Installing ExifTool on Ubuntu/Debian...")
+    if 'ubuntu' in distroName or 'debian' in distroName or 'debian' in distroLike:
+        print("Installing ExifTool on Debian/Ubuntu-based distro...")
         subprocess.run(["sudo", "apt-get", "update"], check=True)
         subprocess.run(["sudo", "apt-get", "install", "-y", "libimage-exiftool-perl"], check=True)
+        print("ExifTool installed successfully on Linux!")
 
-    elif 'centos' in distroName or 'rhel' in distroName:
+    elif 'centos' in distroName or 'rhel' in distroName or 'rhel' in distroLike or 'fedora' in distroLike:
         print("Installing ExifTool on CentOS/RHEL...")
         subprocess.run(["sudo", "yum", "install", "-y", "perl-Image-ExifTool"], check=True)
+        print("ExifTool installed successfully on Linux!")
 
     else:
         print("Unsupported Linux distribution. Please install ExifTool manually.")
-
-    print("ExifTool installed successfully on Linux!")
 
 def install_exiftool():
     os_name = platform.system().lower()
@@ -171,67 +157,6 @@ def install_exiftool():
 
 
     
-##installpackage
-def install_package(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
-
-# Check and install required packages
-
-try:
-    import speedtest
-except ImportError:
-    print("speedtest-cli not found. Installing...")
-    install_package('speedtest-cli')
-    import speedtest
-
-
-try:
-    from ping3 import ping
-except ImportError:
-    print("ping3 not found. Installing...")
-    install_package('ping3')
-    from ping3 import ping
-
-try:
-    import spacy
-except ImportError:
-    print("spaCy not found. Installing...")
-    install_package('spacy')
-    os.system("python -m spacy download en_core_web_sm")
-    import spacy
-
-try:
-    from flask import Flask, render_template
-except ImportError:
-    print("Flask not found. Installing...")
-    install_package('flask')
-    from flask import Flask, render_template
-
-try:
-    from wifi import Cell, Scheme
-except ImportError:
-    print("wifi not found. Installing...")
-    install_package('wifi')
-    from wifi import Cell, Scheme
-    
-try:
-    import qrcode
-except ImportError:
-    print("qrcode not found. Installing...")
-    install_package('qrcode')
-    import qrcode
-
-   
-try:
-    install_exiftool()
-except subprocess.CalledProcessError as e:
-    print(f"An error occurred during installation: {e}")
-    sys.exit(1)
-except Exception as e:
-    print(f"An unexpected error occurred: {e}")
-    sys.exit(1)
-
-
 def get_geoip_info(ip):
     response = requests.get(f"https://ipinfo.io/{ip}/json")
     return response.json()
@@ -248,6 +173,11 @@ def dns_query(dns_ip, domain_query):
         return str(e)
 
 def test_speed():
+    try:
+        import speedtest
+    except ImportError:
+        print("speedtest-cli is not installed. Run: pip install speedtest-cli")
+        return None, None, None
     # Runs a speed test and returns download, upload speeds, and latency
     st = speedtest.Speedtest()
     st.get_best_server()
@@ -266,6 +196,14 @@ RESET = "\033[0m"
 
 ##Metadatadef extract_metadata(file_path):
 def extract_metadata(file_path):
+    try:
+        install_exiftool()
+    except subprocess.CalledProcessError as e:
+        print(f"An error occurred during ExifTool installation: {e}")
+        return None
+    except Exception as e:
+        print(f"An unexpected error occurred during ExifTool installation: {e}")
+        return None
     try:
         # Build and run the ExifTool command
         command = ["exiftool", "-j", file_path]
@@ -409,6 +347,11 @@ def get_current_wifi():
 
 def generate_wifi_qr(ssid, password=None):
     if ssid and ssid != "Not Connected":
+        try:
+            import qrcode
+        except ImportError:
+            print("qrcode is not installed. Run: pip install qrcode")
+            return
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
@@ -1058,10 +1001,12 @@ def traceip():
 		print("[*] Aborting.....")
 		print()
 
-##Payment Support 
-stripe.api_key = "sk_test_51PPJGRHFUeNFgW9qtt7XLXIZZxuFRfkdoXXOqDY9gHGWlzo4ODBuqnnOTHLKDDop5OJMhC5YdLaqO3McPnrPbfd800mcey87nX"
+##Payment Support
+stripe.api_key = os.environ.get("STRIPE_SECRET_KEY", "")
 
 def create_checkout_session():
+    if not stripe.api_key:
+        return None
     try:
         session = stripe.checkout.Session.create(
             payment_method_types=['card'],
@@ -1927,14 +1872,24 @@ elif option == "18":
     if second_input == "28":
         information = """Text Analysis is used to analyze, process, and extract information from text data using NLP processing, \nwith an Integration with deep learning frameworks \nEg: Apple is looking at buying U.K. startup for $1 billion."""
         print(information)
-        nlp = spacy.load('en_core_web_sm')
-        ##text = "Apple is looking at buying U.K. startup for $1 billion."
-        text = input("\n\033[1;91m[?]\033[1;97m Enter the Text To Analyse: \033[1;94m")
-        doc = nlp(text)
-        
-        print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mTokens: \033[0m")
-        for token in doc:
-            print(token.text)
+        spacy_ready = False
+        try:
+            import spacy
+            nlp = spacy.load('en_core_web_sm')
+            spacy_ready = True
+        except ImportError:
+            print("spaCy is not installed. Run: pip install spacy && python -m spacy download en_core_web_sm")
+        except OSError:
+            print("spaCy model missing. Run: python -m spacy download en_core_web_sm")
+
+        if spacy_ready:
+            ##text = "Apple is looking at buying U.K. startup for $1 billion."
+            text = input("\n\033[1;91m[?]\033[1;97m Enter the Text To Analyse: \033[1;94m")
+            doc = nlp(text)
+
+            print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mTokens: \033[0m")
+            for token in doc:
+                print(token.text)
             
         
         print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mPOS Tags: \033[0m")
@@ -1977,12 +1932,13 @@ elif option == "18":
             print(f"\n\033[1;91m[*]\033[1;97m Performing speed test on dns server {dnsinf_server}...\033[1;91m[*]\033[1;97m")
             download_speed, upload_speed, latency = test_speed()
             sleep(0.1)
-            print(f"\033[1;91m➤\033[1;93m Download Speed\033[0m: {download_speed:.2f} Mbps")
-            sleep(0.1)
-            print(f"\033[1;91m➤\033[1;93m Upload Speed\033[0m: {upload_speed:.2f} Mbps")
-            sleep(0.1)
-            print(f"\033[1;91m➤\033[1;93m Latency\033[0m: {latency:.2f} ms")
-            print("")
+            if download_speed is not None:
+                print(f"\033[1;91m➤\033[1;93m Download Speed\033[0m: {download_speed:.2f} Mbps")
+                sleep(0.1)
+                print(f"\033[1;91m➤\033[1;93m Upload Speed\033[0m: {upload_speed:.2f} Mbps")
+                sleep(0.1)
+                print(f"\033[1;91m➤\033[1;93m Latency\033[0m: {latency:.2f} ms")
+                print("")
         
             sys.exit(1)
             
