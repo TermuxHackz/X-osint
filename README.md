@@ -405,6 +405,15 @@ ModuleNotFoundError: No module named 'googlesearch'
 3) ModuleNotFoundError: No module named 'tkinter'?<br>
 <u>Solution: </u> tkinter is not a pip package, it ships with your OS/Termux. On Termux run <code>pkg install python-tkinter</code>, on Debian/Kali/Ubuntu run <code>sudo apt install python3-tk</code>, then re-run xosint.
 
+4) On Termux, pip fails trying to build cryptography from source with errors like <code>Rust not found</code> or <code>metadata-generation-failed</code>?<br>
+<u>Solution: </u> This happens on some Termux/Android setups where pip can't find a prebuilt cryptography wheel and tries to compile it itself, which needs a Rust toolchain. Run <code>pkg install python-cryptography rust binutils</code> first so Termux's own prebuilt cryptography package is used instead, then re-run <code>pip install -r requirements.txt</code>. setup.sh now does this automatically.
+
+5) On Termux, after running setup.sh you see <code>chmod: changing permissions of 'xosint': Operation not permitted</code> and then <code>xosint: Permission denied</code> when you try to run it?<br>
+<u>Solution: </u> This was a bug in setup.sh: it tried to chmod the file after copying it into <code>$PREFIX/bin</code>, which can fail with "Operation not permitted" on some Android/Termux storage setups, leaving the copied file non-executable. setup.sh now makes xosint executable before copying it, so this should no longer happen. Pull the latest master and re-run <code>bash setup.sh</code>. If you still hit this, you can fix it manually with <code>chmod +x $PREFIX/bin/xosint</code> (Termux) or <code>sudo chmod +x /usr/local/bin/xosint</code> (Linux).
+
+6) Running inside a proot/chroot Linux distro (e.g. via Termux) and getting "Running pip as the 'root' user can result in broken permissions" or a different ModuleNotFoundError than expected?<br>
+<u>Solution: </u> Inside a proot distro you are typically already root, so you don't need <code>sudo</code>, and you should always install with <code>pip install -r requirements.txt</code> from inside the X-osint folder rather than installing individual packages by hand, since a guessed package name (e.g. <code>pingsearch</code> instead of <code>ping3</code>) will not match what xosint actually imports.
+
 
 
 

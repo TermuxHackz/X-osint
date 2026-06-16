@@ -42,6 +42,9 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Installing Python, Tor and Tkinter\033[0m"
 pkg install -y python tor python-tkinter libxslt python-numpy
 echo
+echo -e "\033[1;91m[*]\033[1;97m Installing prebuilt cryptography and rust (needed if pip has to build cryptography from source)\033[0m"
+pkg install -y python-cryptography rust binutils
+echo
 echo -e "\033[1;91m[*]\033[1;97m Installing pip dependencies from requirements.txt\033[0m"
 echo
 pip install --upgrade pip
@@ -62,22 +65,23 @@ echo
 echo -e "\033[1;91m[*]\033[1;97m Setting up environment \033[0m"
 echo
 if [ -f xosint ] && [ -f setup.sh ]; then
-cp -r xosint $PREFIX/bin && \
+chmod u+x xosint && \
+cp -f xosint $PREFIX/bin/xosint && \
 cp -r subdomains.txt $PREFIX/bin && \
 cp -r templates $PREFIX/bin && \
-cp -r static $PREFIX/bin && \
-chmod u+x $PREFIX/bin/xosint && \
-chmod u+x $PREFIX/bin/subdomains.txt && \
-chmod u+x $PREFIX/bin/templates && \
-chmod u+x $PREFIX/bin/static
+cp -r static $PREFIX/bin
 if [ $? -eq 0 ]; then
 REPO_DIR=$(pwd)
 cd ..
 rm -rf "$REPO_DIR"
-fi
-fi
 printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Termux To use X-osint\e[0m\n"
 printf "\e[1;91m[*]\e[1;97m After reopen your termux just type '\e[1;91mxosint\e[1;97m' to launch X-osint \e[0m"
+else
+printf "\e[1;91m[*]\e[1;97m Install failed while copying files to \$PREFIX/bin, see the errors above\e[0m\n"
+fi
+else
+printf "\e[1;91m[*]\e[1;97m xosint or setup.sh not found in the current directory\e[0m\n"
+fi
 exit
 
  elif [[ $terminal == "02" || $terminal == "2" ]]; then
@@ -118,25 +122,26 @@ printf "\e[1;94mSetting up environment for Linux .. \e[0m\n"
 sleep 1
 echo
 if [ -f xosint ] && [ -f setup.sh ]; then
-sudo cp -r xosint /usr/local/bin && \
+chmod +x xosint && \
+sudo cp -f xosint /usr/local/bin/xosint && \
 sudo cp -r subdomains.txt /usr/local/bin && \
 sudo cp -r templates /usr/local/bin && \
-sudo cp -r static /usr/local/bin && \
-sudo chmod +x /usr/local/bin/xosint && \
-sudo chmod +x /usr/local/bin/subdomains.txt && \
-sudo chmod +x /usr/local/bin/templates && \
-sudo chmod +x /usr/local/bin/static
+sudo cp -r static /usr/local/bin
 if [ $? -eq 0 ]; then
 REPO_DIR=$(pwd)
 cd ..
 sudo rm -rf "$REPO_DIR"
-fi
-fi
 printf "\e[1;91m[*]\e[1;97m X-osint Installed Successfully, Now its ready for use. So re-open your Linux Terminal To use X-osint\e[0m\n"
 echo
 echo
 printf "\e[1;91m[*]\e[1;97m After reopen your terminal just type '\e[1;91mxosint\e[1;97m' to launch X-osint \e[0m"
 echo ""
+else
+printf "\e[1;91m[*]\e[1;97m Install failed while copying files to /usr/local/bin, see the errors above\e[0m\n"
+fi
+else
+printf "\e[1;91m[*]\e[1;97m xosint or setup.sh not found in the current directory\e[0m\n"
+fi
 exit
 else
 printf "\e[0m\e[1;91m [\e[1;97m~\e[1;91m]\e[1;93m Sorry, lol thats not in the option 😂....open up your eyes..!!. \e[0m\e[1;91m[\e[0m\e[1;97m~\e[0m\e[1;91m]\e[0m\n"
