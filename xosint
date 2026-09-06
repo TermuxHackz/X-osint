@@ -61,10 +61,19 @@ The developer of this tool is not liable for any misuse or illegal activities co
 
 \033[0m"""
 
+def rl_wrap(seq):
+    return f"\001{seq}\002"
+
+def coloured_input(prompt):
+    import re
+    # wrap every \033[...m sequence for readline
+    wrapped = re.sub(r'(\033\[[0-9;]*m)', r'\001\1\002', prompt)
+    return input(wrapped)
+
 def check_disclaimer():
     if not os.path.exists(ACCEPTANCE_FILE):
         print(DISCLAIMER_TEXT)
-        user_input = input("\033[1;93m[+]\033[1;97m Do you accept the disclaimer? (yes/no): ").strip().lower()
+        user_input = coloured_input("\033[1;93m[+]\033[1;97m Do you accept the disclaimer? (yes/no): ").strip().lower()
         
         if user_input == 'yes':
             with open(ACCEPTANCE_FILE, 'w') as f:
@@ -603,7 +612,7 @@ def newsOsint():
     api_key = 'a701b803d0ac4fc89aaded6143de644d'
     
     # Prompt the user to input a name
-    name = input("\033[1;91m[+]\033[1;97mEnter the name you want to search for: \033[0m")
+    name = coloured_input("\033[1;91m[+]\033[1;97mEnter the name you want to search for: \033[0m")
     
     # Fetch news articles related to the input name
     articles = get_news_articles(name, api_key)
@@ -639,10 +648,10 @@ def get_api_keys():
 
 def get_and_save_api_keys():
     while True:
-        ipqualityscore_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your IPQualityScore API key: \033[0m").strip()
-        opencage_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your OpenCage API key: \033[0m").strip()
-        vonage_api_key = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API key: \033[0m").strip()
-        vonage_api_secret = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API secret: \033[0m").strip()
+        ipqualityscore_api_key = coloured_input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your IPQualityScore API key: \033[0m").strip()
+        opencage_api_key = coloured_input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your OpenCage API key: \033[0m").strip()
+        vonage_api_key = coloured_input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API key: \033[0m").strip()
+        vonage_api_secret = coloured_input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Enter your Vonage API secret: \033[0m").strip()
         if ipqualityscore_api_key and opencage_api_key and vonage_api_key and vonage_api_secret:
             with open('numandcage_keys.txt', 'w') as file:
                 file.write(f"{ipqualityscore_api_key}\n{opencage_api_key}\n{vonage_api_key}\n{vonage_api_secret}")
@@ -681,7 +690,7 @@ def is_valid_phone_number(phone_number):
     return False
 
 def open_in_maps(latitude, longitude):
-    choice = input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Would you like to open the location in Google Maps or Apple Maps? (Enter 'google' or 'apple'): \033[0m").strip().lower()
+    choice = coloured_input("\033[1;91m[\033[1;33;40m*\033[0m\033[1;91m] \033[1;97m Would you like to open the location in Google Maps or Apple Maps? (Enter 'google' or 'apple'): \033[0m").strip().lower()
     if choice == 'google':
         webbrowser.open(f"https://www.google.com/maps/search/?api=1&query={latitude},{longitude}")
     elif choice == 'apple':
@@ -694,7 +703,7 @@ def phone_inf():
 
     while True:
         print("")
-        phone_number = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter the phone number (with country code, e.g., +1234567890): \033[0m").strip()
+        phone_number = coloured_input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter the phone number (with country code, e.g., +1234567890): \033[0m").strip()
         if is_valid_phone_number(phone_number):
             break
         else:
@@ -770,8 +779,8 @@ def find_api_keys():
 
 def find_and_save_keys():
     while True:
-        numverify_api_key = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your Numverify API key: \033[0m").strip()
-        opencage_api_key = input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your OpenCage API key: \033[0m").strip()
+        numverify_api_key = coloured_input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your Numverify API key: \033[0m").strip()
+        opencage_api_key = coloured_input("\033[1;91m[\033[1;33;40m+\033[0m\033[1;91m] \033[1;93m Enter your OpenCage API key: \033[0m").strip()
         if numverify_api_key and opencage_api_key:
             with open('numandcage_keys.txt', 'w') as file:
                 file.write(f"{numverify_api_key}\n{opencage_api_key}")
@@ -792,7 +801,7 @@ def find_location_info(country_code, location, opencage_api_key):
 def phone_inf2():
     numverify_api_key, opencage_api_key = find_api_keys()
     
-    phone_number = input("\033[1;97m[+]\033[0m\033[1;91m  Enter the phone number: \033[0m")
+    phone_number = coloured_input("\033[1;97m[+]\033[0m\033[1;91m  Enter the phone number: \033[0m")
     print("")
     phone_info = find_phone_info(phone_number, numverify_api_key)
 
@@ -894,10 +903,9 @@ banner = ("""\033[38;5;208m
 	   \033[1;97mPlatform: \033[0m\033[1;96m""" + platform.system())
 
 for col in banner:
-    print(colors.CRED2 + col, end="")
+    print(col, end="")
     sys.stdout.flush()
     time.sleep(0.0025)
-
 
 main_menu = ("""
 	\033[1;91m[??] Choose an option:
@@ -931,7 +939,7 @@ about = """\033[1;90m
 This is an osint tool which gathers useful and yet credible valid information about a phone number, user email address and ip address, \nVIN, Protonmail account and so much more, X-osint is an Open source intelligence framework, \nfeel free to clone this repo, if you have features you would like to add or any fixes please open an issue or create a merge
 \033[0m"""
 def traceip():
-	targetip = input("\033[1;91mEnter IP Address: \033[0m")
+	targetip = coloured_input("\033[1;91mEnter IP Address: \033[0m")
 	r = requests.get("http://ip-api.com/json/" + targetip)
 	print("\n\033[1;91m[*]\033[1;97m IP detail is given down below\n")
 	#print()
@@ -989,7 +997,7 @@ def traceip():
 	print(" \033[1;91m➤\033[1;97m Google Map     : \033[1;94mhttps://maps.google.com/?q=" + str(r.json() ['lat']) + ',' + str(r.json() ['lon']))
 	sleep(0.1)
 	print()
-	mapaddress = input("\033[1;91m[*]\033[1;97m Press ENTER To Open Location on Google maps or press any other key to quit: ")
+	mapaddress = coloured_input("\033[1;91m[*]\033[1;97m Press ENTER To Open Location on Google maps or press any other key to quit: ")
 	if mapaddress == "":
 		print()
 		print("[*] Opening Location on google map")
@@ -1058,7 +1066,7 @@ def show_support_popup():
 
 ###email address information gathering
 def email_info():
-	mailid = input("\033[1;91mEnter email address: \033[1;94m")
+	mailid = coloured_input("\033[1;91mEnter email address: \033[1;94m")
 	if not re.match(r"[^@]+@[^@]+\.[^@]+", mailid):
 		print("Please input a valid Email Address!")
 		return
@@ -1203,7 +1211,7 @@ def update():
 	print("\033[1;91m\t[!] PLEASE MAKE SURE YOU CHOOSE CORRECTLY [!] \033[0m\n\n")
 	print("\033[1;34m\t\t[\033[0m\033[1;77m1\033[0m\033[1;34m]\033[0m\033[1;93mTermux\033[0m")
 	print("\033[1;34m\t\t[\033[0m\033[1;77m2\033[0m\033[1;34m]\033[0m\033[1;93mLinux\033[0m\n")
-	update_terminal = input("\033[1;94mChoose: \033[0m")
+	update_terminal = coloured_input("\033[1;94mChoose: \033[0m")
 	
 	if update_terminal == "1":
 		print("\033[1;97m[+] Updating for termux......\033[0m")
@@ -1291,14 +1299,14 @@ check_disclaimer()
 
 print(banner)
 print(main_menu)
-option = input("\033[38;5;208mxosint>> \033[1;97m") 
+option = coloured_input("\033[38;5;208mxosint>> \033[1;97m") 
 if option == "1":
 	traceip()
 elif option == "2":
 	email_info()
 elif option == "3":
     def main():
-        image_path = input("Enter the path to the image: ").strip()
+        image_path = coloured_input("Enter the path to the image: ").strip()
         location = extract_gps_info(image_path)
         if location:
             print("\033[1;91m[+]\033[0m\033[1;97mMaps Location wil be opened in 3secs.. \033[0m")
@@ -1313,11 +1321,11 @@ elif option == "4":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
-		host_ip = input("\033[1;91m[+]\033[0m\033[1;97mShodan Host Search (IP): \033[0m")
+		host_ip = coloured_input("\033[1;91m[+]\033[0m\033[1;97mShodan Host Search (IP): \033[0m")
 		url = "https://api.shodan.io/shodan/host/"+ host_ip +"?key=" + shodan_api
 		request = requests.get(url)
 		txt = request.text
@@ -1331,7 +1339,7 @@ elif option == "5":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
@@ -1348,11 +1356,11 @@ elif option == "6":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
-		exploit_cve = input("\033[1;91m[+]\033[0m\033[1;97mExploit CVE: \033[0m")
+		exploit_cve = coloured_input("\033[1;91m[+]\033[0m\033[1;97mExploit CVE: \033[0m")
 		url = "https://exploits.shodan.io/api/search?query="+ "cve:" + exploit_cve +"&key=" + shodan_api
 		request = requests.get(url)
 		txt = request.text
@@ -1366,11 +1374,11 @@ elif option == "7":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
-		exploit_osvdb = input("\033[1;91m[+]\033[0m\033[1;97mExploit Open Source Vulnerability Database: \033[0m")
+		exploit_osvdb = coloured_input("\033[1;91m[+]\033[0m\033[1;97mExploit Open Source Vulnerability Database: \033[0m")
 		url = "https://exploits.shodan.io/api/search?query="+ "osvdb:" + exploit_osvdb +"&key=" + shodan_api
 		request = requests.get(url)
 		txt = request.text
@@ -1385,11 +1393,11 @@ elif option == "8":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
-		hostnames = input("\033[1;91m[+]\033[0m\033[1;97mDNS Lookup: \033[0m")
+		hostnames = coloured_input("\033[1;91m[+]\033[0m\033[1;97mDNS Lookup: \033[0m")
 		url = "https://api.shodan.io/dns/resolve?hostnames="+ hostnames +"&key=" + shodan_api
 		request = requests.get(url)
 		txt = request.text
@@ -1404,11 +1412,11 @@ elif option == "9":
 				shodan_api=file.readline().rstrip('\n')
 		else:
 			file = open('api.txt', 'w')
-			shodan_api = input("[+] Please enter a valid Shodan API key (Shodan.io): ")
+			shodan_api = coloured_input("[+] Please enter a valid Shodan API key (Shodan.io): ")
 			file.write(shodan_api)
 			print("[+] File written: ./api.txt")
 			file.close()
-		ips = input("\033[1;91m[+]\033[0m\033[1;97mDNS Reverse: \033[0m")
+		ips = coloured_input("\033[1;91m[+]\033[0m\033[1;97mDNS Reverse: \033[0m")
 		url = "https://api.shodan.io/dns/reverse?ips="+ ips +"&key=" + shodan_api
 		request = requests.get(url)
 		txt = request.text
@@ -1418,9 +1426,9 @@ elif option == "9":
 
 elif option == "10":
 	def hunter_email_finder():
-		email_domain = input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
-		first_name = input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
-		last_name = input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
+		email_domain = coloured_input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
+		first_name = coloured_input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
+		last_name = coloured_input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
 		url = "https://api.hunter.io/v2/email-finder?domain="+ email_domain + "&first_name=" + first_name +"&last_name=" + last_name +"&api_key=" + hunter_api
 		request = requests.get(url)
 		txt = request.text
@@ -1432,16 +1440,16 @@ elif option == "10":
 			hunter_api=file.readline().rstrip('\n')
 	else:
 		file = open('hunter_io_api', 'w')
-		hunter_api = input("[+] Please enter a valid Hunter API key to continue (Get from Hunter.io): ")
+		hunter_api = coloured_input("[+] Please enter a valid Hunter API key to continue (Get from Hunter.io): ")
 		file.write(hunter_api)
 		print("[+] File written: ./hunter_io_api.txt")
 		file.close()
 		hunter_email_finder()
 
 	def hunter_email_finder():
-		email_domain = input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
-		first_name = input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
-		last_name = input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
+		email_domain = coloured_input("\033[1;91m[+]\033[0m\033[1;97mDomain: \033[0m")
+		first_name = coloured_input("\033[1;91m[+]\033[0m\033[1;97mFirst Name: \033[0m")
+		last_name = coloured_input("\033[1;91m[+]\033[0m\033[1;97mLast Name: \033[0m")
 		url = "https://api.hunter.io/v2/email-finder?domain="+ email_domain + "&first_name=" + first_name +"&last_name=" + last_name +"&api_key=" + hunter_api
 		request = requests.get(url)
 		txt = request.text
@@ -1449,7 +1457,7 @@ elif option == "10":
 		print(json.dumps(parsed, indent=2, sort_keys=True))
 
 elif option == "11":
-    file_path = input("\033[1;91m[+]\033[0m\033[1;97m Enter the path of any file: \033[0m")
+    file_path = coloured_input("\033[1;91m[+]\033[0m\033[1;97m Enter the path of any file: \033[0m")
     if not os.path.isfile(file_path):
         print("{RED}Error:{RESET} The file does not exist. Please check the path and try again.")
     else:
@@ -1472,7 +1480,7 @@ elif option == "11":
             print(f"{RED}No metadata could be extracted from the file.{RESET}")
 		
 elif option == "12":
-	email_add = input("\033[1;91m[+]\033[0m\033[1;97mEnter email: \033[0m")
+	email_add = coloured_input("\033[1;91m[+]\033[0m\033[1;97mEnter email: \033[0m")
 	url = "https://api.twitter.com/i/users/email_available.json?email=" + email_add 
 	request = requests.get(url)
 	txt = request.text
@@ -1483,8 +1491,8 @@ elif option == "13":
 	import resolver
 	import threading
 
-	domain = input("\033[1;91m[+]\033[0m\033[1;97mEnter domain name (without www): \033[0m")
-	file_path = input("\033[1;91m[+]\033[0m\033[1;97mPath of subdomains lists (Get from my github): \033[0m")
+	domain = coloured_input("\033[1;91m[+]\033[0m\033[1;97mEnter domain name (without www): \033[0m")
+	file_path = coloured_input("\033[1;91m[+]\033[0m\033[1;97mPath of subdomains lists (Get from my github): \033[0m")
 	
 	def check_host(self, host):
 		is_valid = False
@@ -1524,8 +1532,8 @@ elif option == "13":
 elif option == "14":
 		try:
 			## print_formatted_text(HTML('<b><u>;GOOGLE DORK HACKING </u></b>')) 
-			dork = input('\033[1;91m\n[+]\033[0m\033[1;97mEnter The Dork Search Query (eg: intext:"Index of /" +passwd): \033[0m')
-			amount = input("\033[1;91m[+]\033[0m\033[1;97mEnter The Number Of sites To dork (eg: 4): \033[0m")
+			dork = coloured_input('\033[1;91m\n[+]\033[0m\033[1;97mEnter The Dork Search Query (eg: intext:"Index of /" +passwd): \033[0m')
+			amount = coloured_input("\033[1;91m[+]\033[0m\033[1;97mEnter The Number Of sites To dork (eg: 4): \033[0m")
 			print ("\n ")
 			
 			requ = 0
@@ -1541,7 +1549,7 @@ elif option == "14":
 				data = (counter, results)
 				time.sleep(0.1)
 				print("\n")
-			file = input('\033[1;91m[!]\033[0m\033[1;94mEnter name to save output as (eg: output.txt): \033[0m')
+			file = coloured_input('\033[1;91m[!]\033[0m\033[1;94mEnter name to save output as (eg: output.txt): \033[0m')
 			original_stdout = sys.stdout
 			try:
 				with open(file, 'w') as f:
@@ -1565,7 +1573,7 @@ elif option == "19":
 	print("\033[1;91m[+]\033[1;97m Kindly take a screenshot or screenrecord of the error faced and mail them \nto me and i would give you feedback based on those bugs you have \nreported to me and fix them, Thank you \033[0m")
 	print("")
 	try:
-		report = input('\033[1;95mReport bug (y/n): \033[0m')
+		report = coloured_input('\033[1;95mReport bug (y/n): \033[0m')
 		if report == "y":
 			try:
 				import webbrowser
@@ -1639,8 +1647,8 @@ elif option == "15":
 			print("Stopping...")
 			exit()
 
-	target = input("\033[1;91m[+]\033[0m\033[1;97mEnter SMTP Server: \033[0m")
-	port = input('\033[1;91m[+]\033[0m\033[1;97mEnter port or type "*" to use all ports: \033[0m')
+	target = coloured_input("\033[1;91m[+]\033[0m\033[1;97mEnter SMTP Server: \033[0m")
+	port = coloured_input('\033[1;91m[+]\033[0m\033[1;97mEnter port or type "*" to use all ports: \033[0m')
 	spoof(target,port)
 	userenum(target,port)
  
@@ -1661,10 +1669,10 @@ elif option == "16":
                      \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m Go back
                      """) ##I would still add more here
     print(ten_main_menu)
-    ten_input = input('\033[38;5;208mxosint>> \033[0m')
+    ten_input = coloured_input('\033[38;5;208mxosint>> \033[0m')
     
     if ten_input == "1":
-        email_answer = input("\033[1;91m[+]\033[1;97m Enter the email to check for Data Breach: \033[0m")
+        email_answer = coloured_input("\033[1;91m[+]\033[1;97m Enter the email to check for Data Breach: \033[0m")
         print("")
         def search_by_email(email_answer):
             api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-email"
@@ -1690,7 +1698,7 @@ elif option == "16":
             print("\033[1;91m[+]\033[0m\033[1;97m No Data found or an error occurred. \033[0m")
     
     elif ten_input == "2":
-        domain_answer = input("\033[1;91m[+]\033[1;97m Enter the Doamin to check (ending in .com): \033[0m")
+        domain_answer = coloured_input("\033[1;91m[+]\033[1;97m Enter the Doamin to check (ending in .com): \033[0m")
         print("")
         def search_by_domain(domain_answer):
             api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-domain"
@@ -1715,7 +1723,7 @@ elif option == "16":
             
     
     elif ten_input == "3":
-        username_answer = input("\033[1;91m[+]\033[1;97m Enter the Username to check: \033[0m")
+        username_answer = coloured_input("\033[1;91m[+]\033[1;97m Enter the Username to check: \033[0m")
         print("")
         def search_by_domain(username_answer):
             api_url = "https://cavalier.hudsonrock.com/api/json/v2/osint-tools/search-by-username"
@@ -1797,7 +1805,7 @@ elif option == "17":
 		#session.proxies["https"] = "127.0.0.1:9050"
 		
 		
-		query = input('\033[1;91m[+]\033[0m\033[1;94mEnter keyword to search: \033[0m')
+		query = coloured_input('\033[1;91m[+]\033[0m\033[1;94mEnter keyword to search: \033[0m')
 		URL = f"https://ahmia.fi/search/?q={query}"
 		page = requests.get(URL)
 		request = requests.get(URL)
@@ -1811,7 +1819,7 @@ elif option == "17":
 			for a_href in soup.find_all("a", href=True):
 				print(a_href["href"])
 			time.sleep(0.5)
-			choice = input('\033[1;91m[+]\033[0m\033[1;94mOpen results in browser? (y/n): \033[0m')
+			choice = coloured_input('\033[1;91m[+]\033[0m\033[1;94mOpen results in browser? (y/n): \033[0m')
 			if choice == "y":
 				import webbrowser
 				webbrowser.open(f"https://ahmia.fi/search/?q={query}")
@@ -1853,7 +1861,7 @@ elif option == "18":
                      \033[1;91m[\033[1;33;40m99\033[0m\033[1;91m] \033[1;97m Quit X-osint
                      """) ##I would still add more here
     print(second_main_menu)
-    second_input = input('\033[38;5;208mxosint>> \033[0m')
+    second_input = coloured_input('\033[38;5;208mxosint>> \033[0m')
     
 
 
@@ -1884,7 +1892,7 @@ elif option == "18":
 
         if spacy_ready:
             ##text = "Apple is looking at buying U.K. startup for $1 billion."
-            text = input("\n\033[1;91m[?]\033[1;97m Enter the Text To Analyse: \033[1;94m")
+            text = coloured_input("\n\033[1;91m[?]\033[1;97m Enter the Text To Analyse: \033[1;94m")
             doc = nlp(text)
 
             print("\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mTokens: \033[0m")
@@ -1904,8 +1912,8 @@ elif option == "18":
 ##DnsInf Action    
     if second_input == "27":
         def dnsinf():
-            dnsinf_server = input("\033[1;91m[?]\033[1;97m Enter the DNS server IP address you want to test (e.g., 8.8.8.8): \033[0m")
-            domain_query = input("\033[1;91m[?]\033[1;97m Enter a domain to query (e.g., example.com): \033[0m")
+            dnsinf_server = coloured_input("\033[1;91m[?]\033[1;97m Enter the DNS server IP address you want to test (e.g., 8.8.8.8): \033[0m")
+            domain_query = coloured_input("\033[1;91m[?]\033[1;97m Enter a domain to query (e.g., example.com): \033[0m")
             
             geoip_info = get_geoip_info(dnsinf_server)
             print(f"\n\033[1;91m[\033[1;33;40m!\033[0m\033[1;91m] \033[1;93mGeolocation Information for {dnsinf_server}: \033[0m")
@@ -1948,7 +1956,7 @@ elif option == "18":
 
     if second_input == "26":
         def run_analyser():
-            file_source = input("\033[1;91m[?]\033[1;97m Enter path to the file to analyze (eg: .py or .js file): \033[0m")
+            file_source = coloured_input("\033[1;91m[?]\033[1;97m Enter path to the file to analyze (eg: .py or .js file): \033[0m")
             
             if not os.path.isfile(file_source):
                 print(f"\033[1;91m[!]\033[1;97m File not found: {file_source}")
@@ -2011,7 +2019,7 @@ elif option == "18":
                     run_tookie_osint(tookie_dir)  
                 else:
                     print("Tookie-OSINT already exists.")
-                    run_option = input("\033[1;91m[?]\033[1;97m Do you want to run Tookie-OSINT? (Y/N): \033[0m").strip().lower()
+                    run_option = coloured_input("\033[1;91m[?]\033[1;97m Do you want to run Tookie-OSINT? (Y/N): \033[0m").strip().lower()
                     
                     if run_option == "y":
                         os.chdir(tookie_dir)  
@@ -2049,7 +2057,7 @@ elif option == "18":
                      \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
                      """)
             print(tosint_main_menu)
-            t_option = input("\033[1;91m[\033[1;33;40m?\033[0m\033[1;91m] \033[1;93mSelect an option: \033[0m")
+            t_option = coloured_input("\033[1;91m[\033[1;33;40m?\033[0m\033[1;91m] \033[1;93mSelect an option: \033[0m")
             if t_option == "1":
                 clone_tookie_osint()
             
@@ -2084,7 +2092,7 @@ elif option == "18":
                      \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m  Go back
                      """)
         print(nine_main_menu)
-        seven_input = input('\033[38;5;208mxosint>> \033[0m')
+        seven_input = coloured_input('\033[38;5;208mxosint>> \033[0m')
         
         if seven_input == '1':
             phone_inf()
@@ -2118,7 +2126,7 @@ elif option == "18":
             regexEmail = r"([a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+)"
             print("\n\nYou want to know if a protonmail email is real or not?")
             while invalidEmail:
-                mail = input("\033[1;91m[+]\033[1;97m Enter the email(protonmail accounts only!!): \033[0m")
+                mail = coloured_input("\033[1;91m[+]\033[1;97m Enter the email(protonmail accounts only!!): \033[0m")
                 print("")
                 if(re.search(regexEmail,mail)):
                     invalidEmail = False
@@ -2160,7 +2168,7 @@ elif option == "18":
             print("\n\033[1;91m[?]\033[0m\033[1;97mDo you want to download the public key attached to the email ?\033[0m")
             while invalidResponse:
                 #Input
-                responseFromUser = input("""Please enter "yes" or "no": """)
+                responseFromUser = coloured_input("""Please enter "yes" or "no": """)
                 #Text if the input is valid
                 if responseFromUser == "yes":
                     invalidResponse = False
@@ -2186,7 +2194,7 @@ elif option == "18":
             elif response.status_code == 404:
                 print("\033[1;91m404 Not Found, please try again!!\033[0m")
             
-            searchfor = input("""\033[1;91m[+]\033[0m\033[1;94m Enter email with quotation marks eg "test@protonmail.com":  \n\033[0m""")
+            searchfor = coloured_input("""\033[1;91m[+]\033[0m\033[1;94m Enter email with quotation marks eg "test@protonmail.com":  \n\033[0m""")
             
             print("\nprocessing request....\n")
             
@@ -2231,7 +2239,7 @@ elif option == "18":
         
         #Get protonmail user PGP key
         def pgpkeyinformation():
-            choice = input("""
+            choice = coloured_input("""
                  View PGP key in Terminal  [T] or Download Key [D]: """)
             
             if choice == "T" or "t":
@@ -2240,7 +2248,7 @@ elif option == "18":
                 pgpkeydirectdownload()
                 
         def pgpkeydirectdownload():
-            email_query = input("\nEnter target email to download PGP key: ")
+            email_query = coloured_input("\nEnter target email to download PGP key: ")
             import webbrowser
             alink = 'https://api/protonmail.ch/pks/lookup?op=get&search='+email_query
             new = 2
@@ -2262,7 +2270,7 @@ elif option == "18":
             
             print("\nInput protonmail user email to get user's PGP key\n")
             while invalidEmail:
-                mail = input("Type in protonmail: ")
+                mail = coloured_input("Type in protonmail: ")
                 
                 if (re.search(regexEmail, mail)):
                     invalidEmail = False
@@ -2288,7 +2296,7 @@ elif option == "18":
                     
                     print("Get user PGP Key?: ")
                     while invalidResponse:
-                        responseFromUser = input("""[Y] or [N]: """)
+                        responseFromUser = coloured_input("""[Y] or [N]: """)
                         
                         if responseFromUser == "Y":
                             invalidResponse = False
@@ -2305,7 +2313,7 @@ elif option == "18":
         def protonvpnipsearch():
             while True:
                 try:
-                    ip = ipaddress.ip_address(input('Enter IP Address: '))
+                    ip = ipaddress.ip_address(coloured_input('Enter IP Address: '))
                     
                     break
                 except ValueError:
@@ -2338,7 +2346,7 @@ elif option == "18":
                       \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m Go back
                       """)
         print(proton_osint)
-        b_osint = input('\033[1;91m[+]\033[0m\033[1;94m Make your choice: \033[0m')
+        b_osint = coloured_input('\033[1;91m[+]\033[0m\033[1;94m Make your choice: \033[0m')
         checkProtonAPIStatut()
         if b_osint == "1":
             ##checkprotonmailapistatus()
@@ -2364,13 +2372,13 @@ elif option == "18":
                       \033[1;91m[\033[1;33;40mG\033[0m\033[1;91m] \033[1;97m Go back
                       """)
         print(open_terminal)
-        c_input = input('\033[1;91m[+]\033[0m\033[1;94m Make your choice: \033[0m')
+        c_input = coloured_input('\033[1;91m[+]\033[0m\033[1;94m Make your choice: \033[0m')
         
         if c_input == "1":
             #import vininfo
             import click
             from vininfo import Vin
-            num = input("\033[1;91m[+]\033[1;97m Enter VIN Number: \033[0m")
+            num = coloured_input("\033[1;91m[+]\033[1;97m Enter VIN Number: \033[0m")
             def check(num):
                 if Vin(num).verify_checksum():
                     click.secho('Checksum is valid', fg='green')
@@ -2459,7 +2467,7 @@ elif option == "18":
         import requests
         import find_github_email
         
-        username = input("\033[1;91m[+]\033[0m\033[1;97m Enter the Github Username: \033[0m")
+        username = coloured_input("\033[1;91m[+]\033[0m\033[1;97m Enter the Github Username: \033[0m")
         url_link = f'https://api.github.com/users/{username}'
         url_link2 = f'https://api.github.com/users/{username}/repos'
         
@@ -2487,12 +2495,12 @@ elif option == "18":
         
     elif second_input == "21":
         try:
-            license_plate = input("\033[1;91m[+]\033[0m\033[1;97m License plate(US License plates ONLY FOR NOW): \033[0m")
+            license_plate = coloured_input("\033[1;91m[+]\033[0m\033[1;97m License plate(US License plates ONLY FOR NOW): \033[0m")
             
             lplate = license_plate.upper()
             plate = "".join(license_plate.split(" "))
             
-            state = input("\033[1;91m[+]\033[1;97m State (Eg If its Alabama type 'AL'): \033[0m")
+            state = coloured_input("\033[1;91m[+]\033[1;97m State (Eg If its Alabama type 'AL'): \033[0m")
             state = state.upper()
             
             print("")
