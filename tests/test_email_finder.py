@@ -10,25 +10,27 @@ import pytest
 
 @pytest.fixture
 def email_finder(tmp_path, monkeypatch):
-    # The launcher runs its interactive menu at module scope.
+    # The launcher runs its interactive menu at module scope, so the test compiles
+    # only the option 10 branch of this repository's xosint and runs it with mocks.
     source = Path(__file__).resolve().parents[1] / "xosint"
     tree = ast.parse(source.read_text())
     option_test = ast.parse('option == "10"', mode="eval").body
-    node = next(
+    node = next((
         branch for branch in ast.walk(tree)
         if isinstance(branch, ast.If)
         and ast.dump(
             branch.test.values[0] if isinstance(branch.test, ast.BoolOp) else branch.test
         ) == ast.dump(option_test)
-    )
+    ), None)
+    if node is None:
+        pytest.fail('xosint has no `option == "10"` branch')
     code = compile(ast.Module(body=[node], type_ignores=[]), str(source), "exec")
     monkeypatch.chdir(tmp_path)
-    answers = iter(["example.com", "Élodie", "Martin"])
     requests = Mock()
-    prompt = Mock(side_effect=lambda _: next(answers))
+    prompt = Mock(side_effect=["example.com", "Élodie", "Martin"])
     namespace = dict(option="10", os=os, json=json, time=time, sleep=Mock(),
                      requests=requests, coloured_input=prompt)
-    return requests, prompt, lambda: exec(code, namespace)
+    return requests, prompt, lambda: exec(code, namespace)  # skipcq: PYL-W0122
 
 
 @pytest.mark.parametrize("async_run", [False, True])
