@@ -142,6 +142,13 @@ sudo xosint OR python xosint
 ```
 if your using Termux, Type the same commands from above without the "<b>sudo"</b> and replace "apt" commands to "pkg"
 
+## Using Monid (optional)
+
+Set `MONID_API_KEY` in your environment before running `xosint`.
+Choose option `10` (Email Finder) to fetch Hunter results through Monid.
+With the key set, the domain and name you enter are sent to Monid's servers (`api.monid.ai`), which run the Hunter lookup for you, and each lookup is billed per call to your Monid account.
+See https://docs.monid.ai for setup.
+
 # Usage
 Once installed, X-osint runs as a single interactive command, there is nothing else to type:
 ```
